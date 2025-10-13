@@ -1,0 +1,6 @@
+@PATOA_HostAddress = http://localhost:5228
+
+GET {{PATOA_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
