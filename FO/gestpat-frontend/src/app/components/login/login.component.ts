@@ -2,36 +2,58 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../Services/auth.service';
+import { LoginRequest } from '../../models/auth.model';
+import { HttpClientModule } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   showPassword = false;
-  
+
   loginData = {
-    email: '',
+    username: '',
     password: '',
     rememberMe: false
   };
 
-  constructor(private router: Router) {}
+  errorMessage?: string;
+
+  constructor(private router: Router, private authService: AuthService) { }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {
-    if (this.loginData.email && this.loginData.password) {
-      console.log('Données de connexion:', this.loginData);
-      // Pour l'instant, redirection directe vers home sans API
-      // Ici vous pouvez ajouter la logique d'authentification
-      // Par exemple, appeler un service d'authentification
-      this.router.navigate(['/home']);
+
+    if (!this.loginData.username || !this.loginData.password) {
+      this.errorMessage = 'Veuillez remplir tous les champs';
+      return;
     }
+
+    const loginRequest: LoginRequest = {
+      username: this.loginData.username,
+      password: this.loginData.password
+    };
+
+    this.authService.login(loginRequest).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.errorMessage = 'username ou mot de passe incorrect';
+          return;
+        }
+
+        console.log('Données de connexion:', this.loginData);
+        this.router.navigate(['/home']);
+      },
+     
+    });
+
   }
 }
