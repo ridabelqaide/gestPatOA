@@ -39,7 +39,7 @@ namespace PATOA.WebAPI.DI
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAccountService, AccountService>();
-       
+            services.AddScoped<EnginRepository>();
             services.AddScoped<IAdminService, AdminService>();
 
             return services;
