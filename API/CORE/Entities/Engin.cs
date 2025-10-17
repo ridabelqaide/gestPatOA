@@ -15,9 +15,6 @@ namespace PATOA.CORE.Entities
         public string? Model { get; set; }
         public string? PuissanceFiscal { get; set; }
         public DateTime MiseCirculationDate { get; set; }
-        public decimal TH { get; set; }
-        public decimal TJ { get; set; }
-        [MaxLength(50)]
         public string Genre { get; set; }
 
         [MaxLength(50)]
@@ -34,6 +31,10 @@ namespace PATOA.CORE.Entities
 
         [MaxLength(50)]
         public string Matricule { get; set; }
+        public decimal TH { get; set; }
+        public decimal TJ { get; set; }
+        [MaxLength(50)]
+
         
         // Relation avec les assurances
         public ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
