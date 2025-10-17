@@ -8,4 +8,3 @@ obj/
 logs/
 /BO/WebAPI/appsettings.Development.json
 /BO/WebAPI/appsettings.json
-/API/INFRA/Migrations

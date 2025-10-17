@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Auto } from '../models/auto.model';
+import { environment } from '../../Environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutoService {
-  private API_URL = 'http://localhost:5228/api/engins'; 
-
+  private API_URL = `${environment.base_url}/api/engins`; 
   constructor(private http: HttpClient) { }
 
   getAutos(): Observable<Auto[]> {
