@@ -34,11 +34,17 @@ namespace PATOA.WebAPI.DI
 
         
             services.AddScoped<IAccountRepository, AccountRepository>();
-        
+            services.AddScoped<IPublicPatRepository, PublicPatRepository>();
 
+
+            services.AddScoped<IPrivatePatRepository, PrivatePatRepository>();
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPrivatePatService, PrivatePatService>();
+            services.AddScoped<IPublicPatService, PublicPatService>();
+
+
             services.AddScoped<EnginRepository>();
             services.AddScoped<IAdminService, AdminService>();
 

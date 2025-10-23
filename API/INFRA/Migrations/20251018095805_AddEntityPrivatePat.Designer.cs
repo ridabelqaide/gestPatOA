@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PATOA.INFRA.Data;
 
@@ -11,9 +12,11 @@ using PATOA.INFRA.Data;
 namespace INFRA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251018095805_AddEntityPrivatePat")]
+    partial class AddEntityPrivatePat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,10 +313,6 @@ namespace INFRA.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AcquisitionSourceAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double?>("Area")
                         .HasColumnType("float");
 
@@ -326,10 +325,6 @@ namespace INFRA.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("CurrentUse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CurrentUseAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -353,24 +348,24 @@ namespace INFRA.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LandReferencesAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("Latitude")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LeaseAgreementDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LeaseDuration")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
+                    b.Property<string>("LeaseAgreementReference")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LocationAr")
+                    b.Property<string>("LeaseDurationDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LeaseDurationMonths")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -383,17 +378,10 @@ namespace INFRA.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NotesAr")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("PrivateDomainRemovalDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PrivateDomainRemovalJustification")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrivateDomainRemovalJustificationAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -402,10 +390,6 @@ namespace INFRA.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrivateUseDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrivateUseDetailsAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -423,17 +407,13 @@ namespace INFRA.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("RentAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("RentPaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("RentalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("TenantName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenantNameAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -451,10 +431,6 @@ namespace INFRA.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TypeAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -464,192 +440,12 @@ namespace INFRA.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("ZoningDesignation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZoningDesignationAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("PrivatePats");
-                });
-
-            modelBuilder.Entity("PATOA.CORE.Entities.PublicPat", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AcquisitionSource")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AcquisitionSourceAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("Area")
-                        .HasColumnType("float");
-
-                    b.Property<string>("AuthorizedPerson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorizedPersonAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("CurrentUse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CurrentUseAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("IncreaseRatePercent")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsPrivatelyUsedByThirdParty")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LandReferences")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LandReferencesAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("LegalBasis")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LegalBasisAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Longitude")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("MarketValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NotesAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("OccupationFeeAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("OccupationFeeDuration")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("OccupationPermitDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentDeadlinesAndMethods")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentDeadlinesAndMethodsAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrivateUseDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrivateUseDetailsAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("RegistrationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RegistrationNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegistrationReference")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RemovalFromPublicDomainDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RemovalFromPublicDomainReference")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TemporaryOccupationDuration")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("ZoningDesignation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZoningDesignationAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PublicPats");
                 });
 
             modelBuilder.Entity("PATOA.CORE.Entities.Right", b =>
