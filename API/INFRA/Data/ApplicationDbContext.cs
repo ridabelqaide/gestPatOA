@@ -13,8 +13,11 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
-     
-    
+
+    public DbSet<PrivatePat> PrivatePats { get; set; }
+
+    public DbSet<PublicPat> PublicPats { get; set; }
+
     public DbSet<Role> Roles { get; set; }
    
  
