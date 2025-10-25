@@ -46,7 +46,7 @@ export class SidebarComponent {
         { id: 'Souk', route: 'Souk', label: 'Souk Hebdomadaire', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
         { id: 'Cimetières', route: 'Cimetières', label: 'Cimetières', icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' },
         { id: 'Lotissments', route: 'Lotissments', label: 'Lotissments', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
-        { id: 'propriétéCollective', route: '/PublicPat', label: 'Propriété Collective', icon: 'M3 12l6-6 6 6 6-6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V12z'},
+        { id: 'propriétéCollective', route: '/home/PublicPat', label: 'Propriété Collective', icon: 'M3 12l6-6 6 6 6-6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V12z'},
 
       ]
     },
@@ -60,7 +60,7 @@ export class SidebarComponent {
         { id: 'Boutiques', route: 'Boutiques', label: 'Boutiques Commerciales', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' },
         { id: 'Pharmacies', route: 'Pharmacies', label: 'Pharmacies', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
         { id: 'Logements', route: 'Logements', label: 'Logements', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-        { id: 'propriétéCollective', route: '/PrivatePat', label: 'Propriété Collective', icon: 'M3 12l6-6 6 6 6-6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V12z' },
+        { id: 'propriétéCollective', route: '/home/PrivatePat', label: 'Propriété Collective', icon: 'M3 12l6-6 6 6 6-6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V12z' },
 
       ]
     },
@@ -69,7 +69,7 @@ export class SidebarComponent {
       label: 'Parc Automobile',
       icon: 'M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2',
       subMenus: [
-        { id: 'ListAuto', route: '/autoList', label: 'List Automobile', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
+        { id: 'ListAuto', route: '/home/autoList', label: 'List Automobile', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
         { id: 'TypeAuto', route: 'TypeAuto', label: 'Type Auto', icon: 'M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2' },
         { id: 'Assurances', route: 'Assurances', label: 'Assurances', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
         { id: 'VisitesTechnique', route: 'VisitesTechnique', label: 'Visites Technique', icon: 'M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
@@ -87,7 +87,7 @@ export class SidebarComponent {
         this.activeRoute = event.url;
       });
   }
-
+  
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
   }
