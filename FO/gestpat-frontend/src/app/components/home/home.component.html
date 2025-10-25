@@ -55,8 +55,12 @@
             <h2 class="text-xl font-semibold text-gray-900">Activité récente</h2>
           </div>
           <div class="p-6">
-            <p class="text-gray-500 text-center">Aucune activité récente</p>
+            <p *ngIf="!hasActiveRoute" class="text-gray-500 text-center">
+              Aucune activité récente
+            </p>
+            <router-outlet (activate)="onActivate()" (deactivate)="onDeactivate()"></router-outlet>
           </div>
+
         </div>
       </div>
     </main>
