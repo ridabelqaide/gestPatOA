@@ -18,6 +18,8 @@ namespace PATOA.CORE.Entities
 
         [MaxLength(250)]
         public string? Type { get; set; }
+        public Decimal Amount { get; set; }
+
         public Guid EnginId { get; set; }
         public Engin Engin { get; set; }
 

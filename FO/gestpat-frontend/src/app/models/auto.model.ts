@@ -1,3 +1,5 @@
+import { Insurance } from "./insurance.model";
+
 export interface Auto {
   id?: string;
   matricule: string;
@@ -11,4 +13,5 @@ export interface Auto {
   etat: string;
   th: number;
   tj: number;
+  insurance?: Insurance;
 }

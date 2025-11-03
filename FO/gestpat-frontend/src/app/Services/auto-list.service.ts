@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Auto } from '../models/auto.model';
 import { environment } from '../../Environments/environment';
@@ -26,4 +26,12 @@ export class AutoService {
   deleteAuto(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
+  getLastInsurance(search?: string): Observable<Auto[]> {
+    let params = new HttpParams();
+    if (search) params = params.set('search', search);
+
+    return this.http.get<Auto[]>(`${this.API_URL}/last-insurance`, { params });
+  }
+
+
 }

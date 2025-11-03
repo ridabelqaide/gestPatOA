@@ -35,6 +35,7 @@ namespace PATOA.WebAPI.DI
         
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IPublicPatRepository, PublicPatRepository>();
+            services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 
 
             services.AddScoped<IPrivatePatRepository, PrivatePatRepository>();
@@ -43,7 +44,7 @@ namespace PATOA.WebAPI.DI
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPrivatePatService, PrivatePatService>();
             services.AddScoped<IPublicPatService, PublicPatService>();
-
+            services.AddScoped<IInsuranceService, InsuranceService>();
 
             services.AddScoped<EnginRepository>();
             services.AddScoped<IAdminService, AdminService>();
