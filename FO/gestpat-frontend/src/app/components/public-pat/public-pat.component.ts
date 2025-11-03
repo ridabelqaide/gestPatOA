@@ -138,15 +138,14 @@ export class PublicPatComponent implements OnInit {
     if (!publicPats || publicPats.length === 0) return;
 
     const headers = [
-      ' رقم التقييد في السجل', 'النـــــــــــــوع', 'المراجع العقارية',
-      'المرجع و تاريخ تسجيله بإدارة التسجيل', 'المساحة', 'الموقع', 'الإحداثيات الجغرافية',
-      ' مصدر تملك العقــار', 'ثمن الاقتناء', 'الأساس القانوني المعتمد لترتيب العقار ضمن الأملاك العامة',
-      'التخصيص حسب وثائق التعمير', 'الاستعمال الفعلي', 'القيمة التداولية للعقـار',
-      'الاستغلال الخصوصي من طرف الغير', 'تاريخ إبرام سند الترخيص بالاستغلال:', 'الشخص المرخص له بالاحتلال المؤقت(أو المرخص لهم)',
-      'مدة الاحتلال المؤقت', 'مدة إتاوة الاحتلال', 'مبلغ إتاوة الاحتلال',
-      'نسبة الزيادة', 'أجال و كيفيات أداء إتاوة الاحتلال المؤقت', 'مرجع إخراج العقار من الملك العام (في حالة الإخراج)',
-      'تاريخ إخراج العقار', 'ملاحظات'
+      'ملاحظات','تاريخ إخراج العقار','مرجع إخراج العقار من الملك العام (في حالة الإخراج)',
+      'أجال و كيفيات أداء إتاوة الاحتلال المؤقت','نسبة الزيادة','مبلغ إتاوة الاحتلال','مدة إتاوة الاحتلال',
+      'مدة الاحتلال المؤقت', 'الشخص المرخص له بالاحتلال المؤقت(أو المرخص لهم)','تاريخ إبرام سند الترخيص بالاستغلال:',
+      'الاستغلال الخصوصي من طرف الغير','القيمة التداولية للعقـار','الاستعمال الفعلي','التخصيص حسب وثائق التعمير',
+      'الأساس القانوني المعتمد لترتيب العقار ضمن الأملاك العامة','ثمن الاقتناء', 'مصدر تملك العقــار','الإحداثيات الجغرافية', 'الموقع',
+      'المساحة','المرجع و تاريخ تسجيله بإدارة التسجيل','المراجع العقارية','النـــــــــــــوع','رقم التقييد في السجل'
     ];
+
 
     // Ligne d'en-tête
     const headerRow = new TableRow({
@@ -166,30 +165,30 @@ export class PublicPatComponent implements OnInit {
     // Lignes de données
     const dataRows = publicPats.map(p => new TableRow({
       children: [
-        new TableCell({ children: [new Paragraph(String(p.registrationNumber ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.typeAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.landReferencesAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(`${p.registrationReference ?? ''} / ${p.registrationDate ?? ''}`)] }),
-        new TableCell({ children: [new Paragraph(String(p.area ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.locationAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(`العرض: ${p.latitude ?? ''}, الطول: ${p.longitude ?? ''}`)] }),
-        new TableCell({ children: [new Paragraph(String(p.acquisitionSourceAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.purchasePrice ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.legalBasisAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.zoningDesignationAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.currentUseAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.marketValue ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.privateUseDetailsAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.occupationPermitDate ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.authorizedPersonAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.temporaryOccupationDuration ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.occupationFeeDuration ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.occupationFeeAmount ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.increaseRatePercent ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.paymentDeadlinesAndMethodsAr ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.removalFromPublicDomainReference ?? ''))] }),
-        new TableCell({ children: [new Paragraph(String(p.removalFromPublicDomainDate ?? ''))] }),
         new TableCell({ children: [new Paragraph(String(p.notesAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.removalFromPublicDomainDate ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.removalFromPublicDomainReference ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.paymentDeadlinesAndMethodsAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.increaseRatePercent ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.occupationFeeAmount ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.occupationFeeDuration ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.temporaryOccupationDuration ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.authorizedPersonAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.occupationPermitDate ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.privateUseDetailsAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.marketValue ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.currentUseAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.zoningDesignationAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.legalBasisAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.purchasePrice ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.acquisitionSourceAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(`العرض: ${p.latitude ?? ''}, الطول: ${p.longitude ?? ''}`)] }),
+        new TableCell({ children: [new Paragraph(String(p.locationAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.area ?? ''))] }),
+        new TableCell({ children: [new Paragraph(`${p.registrationReference ?? ''} / ${p.registrationDate ?? ''}`)] }),
+        new TableCell({ children: [new Paragraph(String(p.landReferencesAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.typeAr ?? ''))] }),
+        new TableCell({ children: [new Paragraph(String(p.registrationNumber ?? ''))] }),
       ]
     }));
 

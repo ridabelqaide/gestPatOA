@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { AutomobileListComponent } from './components/automobile-list/automobile-list.component';
 import { PublicPatComponent } from './components/public-pat/public-pat.component';
 import { PrivatePatComponent } from './components/private-pat/private-pat.component';
+import { ListAutoInsuranceComponent } from './components/list-auto-insurance/list-auto-insurance.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -17,6 +18,8 @@ export const routes: Routes = [
       { path: 'autoList', component: AutomobileListComponent },
       { path: 'PublicPat', component: PublicPatComponent },
       { path: 'PrivatePat', component: PrivatePatComponent },
+      { path: 'ListAutoInsurance', component: ListAutoInsuranceComponent },
+
       { path: '', redirectTo: '', pathMatch: 'full' }
     ]
   },
