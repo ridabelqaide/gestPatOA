@@ -15,18 +15,17 @@ namespace PATOA.INFRA.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<PublicPat>> GetAllAsync(string? registrationNumber = null)
+        public async Task<IEnumerable<PublicPat>> GetAllAsync()
         {
             var query = _context.PublicPats.AsQueryable();
-
-            if (!string.IsNullOrEmpty(registrationNumber))
-            {
-                query = query.Where(p => p.RegistrationNumber.Contains(registrationNumber));
-            }
 
             return await query.ToListAsync();
         }
 
+        public IQueryable<PublicPat> QueryAll()
+        {
+            return _context.PublicPats.AsQueryable();
+        }
         public async Task<PublicPat?> GetByIdAsync(Guid id)
         {
             return await _context.PublicPats.FindAsync(id);

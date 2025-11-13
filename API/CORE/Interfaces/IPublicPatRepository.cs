@@ -7,7 +7,8 @@ namespace PATOA.CORE.Interfaces
 {
     public interface IPublicPatRepository
     {
-        Task<IEnumerable<PublicPat?>> GetAllAsync(string? registrationNumber = null);
+        Task<IEnumerable<PublicPat?>> GetAllAsync();
+        IQueryable<PublicPat> QueryAll();
         Task<PublicPat?> GetByIdAsync(Guid id);
         Task CreateAsync(PublicPat entity);
         Task UpdateAsync(PublicPat existing, PublicPat updated);

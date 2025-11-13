@@ -4,7 +4,7 @@ using PATOA.INFRA.Repositories;
 using PATOA.APPLICATION.Interfaces;
 using PATOA.CORE.Interfaces;
 using PATOA.APPLICATION.Services;
-
+using PATOA.APPLICATION.DTOs;
 namespace PATOA.WebAPI.Controllers
 {
     [ApiController]
@@ -19,11 +19,25 @@ namespace PATOA.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicPat>>> GetAll([FromQuery] string? registrationNumber)
+        public async Task<ActionResult<IEnumerable<PrivatePat>>> GetAll()
         {
-            var list = await _service.GetAllAsync(registrationNumber);
+            var list = await _service.GetAllAsync();
             return Ok(list);
         }
+
+
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<PrivatePat>>> GetPaged(
+    [FromQuery] string? typeAr,
+    [FromQuery] string? locationAr,
+    [FromQuery] string? registrationNumber,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            var result = await _service.GetPagedAsync(typeAr, locationAr, registrationNumber, page, pageSize);
+            return Ok(result);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
@@ -39,9 +53,17 @@ namespace PATOA.WebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var created = await _service.CreateAsync(privatePat);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            try
+            {
+                var created = await _service.CreateAsync(privatePat);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] PrivatePat privatePat)

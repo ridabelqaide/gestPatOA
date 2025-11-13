@@ -4,7 +4,8 @@ using PATOA.CORE.Entities;
 using System.Security.Cryptography;
 using PATOA.CORE.Interfaces;
 using System.Text;
-
+using PATOA.APPLICATION.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace PATOA.APPLICATION.Services
 {
@@ -17,9 +18,9 @@ namespace PATOA.APPLICATION.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<PrivatePat>> GetAllAsync(string? registrationNumber = null)
+        public async Task<IEnumerable<PrivatePat>> GetAllAsync()
         {
-            return await _repository.GetAllAsync(registrationNumber);
+            return await _repository.GetAllAsync();
         }
 
         public async Task<PrivatePat?> GetByIdAsync(Guid id)
@@ -29,8 +30,50 @@ namespace PATOA.APPLICATION.Services
 
         public async Task<PrivatePat> CreateAsync(PrivatePat privatePat)
         {
+            var exists = await _repository.GetAllAsync();
+            if (exists.Any(p => p.RegistrationNumber == privatePat.RegistrationNumber))
+            {
+                throw new Exception("registerNum existe déjà.");
+            }
+
             privatePat.CreatedOn = DateTime.UtcNow;
             return await _repository.AddAsync(privatePat);
+        }
+
+        public async Task<PagedResult<PrivatePat>> GetPagedAsync(
+      string? typeAr = null,
+      string? locationAr = null,
+      string? registrationNumber = null,
+      int page = 1,
+      int pageSize = 10)
+        {
+            page = page <= 0 ? 1 : page;
+            pageSize = pageSize <= 0 ? 10 : pageSize;
+
+            var query = _repository.QueryAll();
+
+            if (!string.IsNullOrEmpty(typeAr))
+                query = query.Where(p => p.TypeAr.Contains(typeAr));
+            if (!string.IsNullOrEmpty(locationAr))
+                query = query.Where(p => p.LocationAr.Contains(locationAr));
+            if (!string.IsNullOrEmpty(registrationNumber))
+                query = query.Where(p => p.RegistrationNumber.Contains(registrationNumber));
+
+            var totalItems = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(p => p.CreatedOn)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<PrivatePat>
+            {
+                Data = data,
+                TotalItems = totalItems,
+                Page = page,
+                PageSize = pageSize
+            };
         }
 
         public async Task<bool> UpdateAsync(Guid id, PrivatePat privatePat)

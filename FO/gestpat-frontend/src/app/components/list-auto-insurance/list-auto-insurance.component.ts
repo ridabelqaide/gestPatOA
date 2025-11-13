@@ -5,15 +5,16 @@ import { Auto } from '../../models/auto.model';
 import { Insurance } from '../../models/insurance.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 import * as FileSaver from 'file-saver';
 import * as docx from 'docx';
 import { TableRow } from 'docx';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list-auto-insurance',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatPaginatorModule],
   templateUrl: './list-auto-insurance.component.html',
   styleUrls: ['./list-auto-insurance.component.css']
 })
@@ -27,21 +28,61 @@ export class ListAutoInsuranceComponent implements OnInit {
   insuranceForm: Insurance = this.resetForm();
   loading = true;
   errors: any = {};
+  vehicules: any[] = [];
+  totalItems = 0;
+  page = 1;
+  pageSize = 5;
+
+  filters: any = {
+    matricule: '',
+    type: '',
+    company: '',
+    date: ''
+  };
+  Types: string[] = [
+    'Responsabilité Civile', 'Tous Risques', 'Dommages Collision', 'Vol et Incendie',
+    'Bris de Glace', 'Catastrophes Naturelles', 'Assistance Routière',
+    'Conducteur Supplémentaire', 'Transport Marchandises', 'Taxi / Professionnelle'
+  ];
+
+  Companies: string[] = [
+    'Wafa Assurance', 'RMA (Royale Marocaine d’Assurance)', 'AXA Assurance Maroc', 'AtlantaSanad Assurance',
+    'MCMA (Mutuelle Centrale Marocaine d’Assurance)', 'Allianz Maroc', 'Saham Assurance', 'MAMDA',
+    'CNIA Saada', 'La Marocaine Vie', 'Zurich Maroc', 'Afriquia Assurance'
+  ];
+
 
   constructor(
     private autoService: AutoService,
-    private insuranceService: InsuranceService
+    private insuranceService: InsuranceService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.loadAutosWithLastInsurance();
+    this.autoService.getAll().subscribe(data => {
+      this.vehicules = data;
+    });
   }
-
+  refreshList(): void {
+    this.loadAutosWithLastInsurance();
+  }
+  resetFilters(): void {
+    this.filters = {};
+    this.searchText = '';
+    this.loadAutosWithLastInsurance();
+  }
   loadAutosWithLastInsurance() {
-    this.autoService.getLastInsurance().subscribe({
-      next: (data: any[]) => {
-        this.autos = data.map(item => {
-          const insurance: Insurance = {
+    const allFilters = { ...this.filters, page: this.page, pageSize: this.pageSize };
+    this.autoService.getLastInsurance(allFilters).subscribe({
+      next: (res: any) => {
+        const dataArray = Array.isArray(res.data) ? res.data : [];
+        this.totalItems = res.totalItems; // ← ici le total réel
+
+        this.autos = dataArray.map((item: any) => ({
+          id: item.enginId,
+          matricule: item.matricule,
+          insurance: {
             id: item.id,
             company: item.company,
             type: item.type,
@@ -50,13 +91,8 @@ export class ListAutoInsuranceComponent implements OnInit {
             startDate: new Date(item.startDate),
             endDate: new Date(item.endDate),
             matricule: item.matricule
-          };
-          return {
-            id: item.enginId,
-            matricule: item.matricule,
-            insurance
-          } as Auto;
-        });
+          }
+        }));
 
         this.filteredAutos = [...this.autos];
         this.loading = false;
@@ -66,6 +102,22 @@ export class ListAutoInsuranceComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onFilterChange(field: string, value: string) {
+    this.filters[field] = value;
+    this.loadAutosWithLastInsurance();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadAutosWithLastInsurance();
+  }
+  search(): void {
+    this.page = 1;
+    this.filters['matricule'] = this.searchText.trim();
+    this.loadAutosWithLastInsurance();
   }
 
   resetForm(): Insurance {
@@ -103,7 +155,6 @@ export class ListAutoInsuranceComponent implements OnInit {
     this.showModal = true;
   }
 
-
   closeModal() {
     this.showModal = false;
     this.editingInsurance = null;
@@ -124,10 +175,11 @@ export class ListAutoInsuranceComponent implements OnInit {
 
   saveInsurance() {
     if (!this.validateForm()) {
-      Swal.fire({ icon: 'error', title: 'Erreur', text: 'Veuillez remplir tous les champs' });
+      this.toastr.error('Veuillez remplir tous les champs correctement');
       return;
     }
 
+    const auto = this.vehicules.find(v => v.matricule === this.insuranceForm.matricule);
 
     const insuranceData: Insurance = {
       id: this.editingInsurance?.id,
@@ -136,123 +188,78 @@ export class ListAutoInsuranceComponent implements OnInit {
       amount: this.insuranceForm.amount,
       startDate: this.insuranceForm.startDate,
       endDate: this.insuranceForm.endDate,
-      enginId: this.insuranceForm.enginId,
+      enginId: auto ? auto.id : '',
       matricule: this.insuranceForm.matricule!
     };
 
-    const obs = this.editingInsurance
-      ? this.insuranceService.update(this.editingInsurance.id!, insuranceData)
+    const isEdit = !!this.editingInsurance; 
+    const obs = isEdit
+      ? this.insuranceService.update(this.editingInsurance!.id!, insuranceData)
       : this.insuranceService.create(insuranceData);
 
     obs.subscribe({
       next: () => {
         this.loadAutosWithLastInsurance();
         this.closeModal();
-        Swal.fire({
-          icon: 'success',
-          title: this.editingInsurance ? 'Assurance mise à jour' : 'Assurance ajoutée'
-        });
+        this.toastr.success(isEdit ? 'Assurance modifiée avec succès' : 'Assurance ajoutée avec succès');
       },
-      error: () => Swal.fire({ icon: 'error', title: 'Erreur', text: 'Problème lors de l\'enregistrement' })
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Problème lors de l\'enregistrement');
+      }
     });
   }
 
 
   deleteInsurance(id?: string) {
     if (!id) return;
-    Swal.fire({
-      title: 'Supprimer cette assurance ?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Oui',
-      cancelButtonText: 'Annuler'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.insuranceService.delete(id).subscribe({
-          next: () => {
-            this.loadAutosWithLastInsurance();
-            Swal.fire({
-              icon: 'success',
-              title: 'Supprimée',
-              text: 'Assurance supprimée'
-            });
-          },
-          error: () =>
-            Swal.fire({
-              icon: 'error',
-              title: 'Erreur',
-              text: 'Problème lors de la suppression'
-            })
-        });
-      }
-    });
-  }
 
-  search() {
-    const query = this.searchText.trim();
-
-    this.autoService.getLastInsurance(query).subscribe({
-      next: (data: any[]) => {
-        this.autos = data.map(item => {
-          const insurance: Insurance = {
-            id: item.id,
-            company: item.company,
-            type: item.type,
-            amount: item.amount,
-            startDate: new Date(item.startDate),
-            endDate: new Date(item.endDate),
-            enginId: item.enginId,
-            matricule: item.matricule
-          };
-          return {
-            id: item.enginId,
-            matricule: item.matricule,
-            insurance
-          } as Auto;
-        });
-
-        this.filteredAutos = [...this.autos];
+    this.insuranceService.delete(id).subscribe({
+      next: () => {
+        this.loadAutosWithLastInsurance();
+        this.toastr.success('Assurance supprimée avec succès');
       },
-      error: err => {
-        console.error(err);
-      }
+      error: () => this.toastr.error('Erreur lors de la suppression')
+    });
+  }
+  exportToWord() {
+    this.autoService.getLastInsuranceAll().subscribe({
+      next: (data: any[]) => {
+        this.generateWordDoc(data);
+      },
+      error: err => this.toastr.error('Erreur lors du chargement des véhicules', 'Erreur')
     });
   }
 
-
-  exportToWord() {
-    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell } = docx;
+  generateWordDoc(autos: any[]) {
+    const { Document, Packer, Paragraph, Table, TableRow, TableCell } = docx;
 
     const tableRows: TableRow[] = [
       new TableRow({
-        children: [
-          'N°', 'Véhicule', 'Compagnie', 'Type', 'Montant', 'Début', 'Fin'
-        ].map(header =>
-          new TableCell({ children: [new Paragraph({ text: header })] })
-        )
+        children: ['N°', 'Véhicule', 'Compagnie', 'Type', 'Montant', 'Début', 'Fin']
+          .map(header => new TableCell({ children: [new Paragraph({ text: header })] }))
       })
     ];
 
-    this.autos.forEach((a, i) => {
+    autos.forEach((a, i) => {
       tableRows.push(new TableRow({
         children: [
           new TableCell({ children: [new Paragraph(String(i + 1))] }),
           new TableCell({ children: [new Paragraph(a.matricule)] }),
-          new TableCell({ children: [new Paragraph(a.insurance?.company || '-')] }),
-          new TableCell({ children: [new Paragraph(a.insurance?.type || '-')] }),
-          new TableCell({ children: [new Paragraph(String(a.insurance?.amount || '-'))] }),
-          new TableCell({ children: [new Paragraph(a.insurance?.startDate?.toLocaleDateString() || '-')] }),
-          new TableCell({ children: [new Paragraph(a.insurance?.endDate?.toLocaleDateString() || '-')] }),
+          new TableCell({ children: [new Paragraph(a.company || '-')] }),
+          new TableCell({ children: [new Paragraph(a.type || '-')] }),
+          new TableCell({ children: [new Paragraph(String(a.amount || '-'))] }),
+          new TableCell({ children: [new Paragraph(a.startDate ? new Date(a.startDate).toLocaleDateString() : '-')] }),
+          new TableCell({ children: [new Paragraph(a.endDate ? new Date(a.endDate).toLocaleDateString() : '-')] }),
         ]
       }));
     });
 
-    const doc = new Document({
-      sections: [{ children: [new Table({ rows: tableRows })] }]
-    });
+    const doc = new Document({ sections: [{ children: [new Table({ rows: tableRows })] }] });
 
     Packer.toBlob(doc).then(blob => {
-      FileSaver.saveAs(blob, 'liste_assurances.docx');
+      FileSaver.saveAs(blob, 'liste_assurances_complet.docx');
+      this.toastr.success('Export Word effectué avec succès !');
     });
   }
 }

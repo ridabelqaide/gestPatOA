@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Auto } from '../models/auto.model';
 import { environment } from '../../Environments/environment';
-
+import { PagedResult } from '../models/paged-result.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,8 +11,18 @@ export class AutoService {
   private API_URL = `${environment.base_url}/api/engins`; 
   constructor(private http: HttpClient) { }
 
-  getAutos(): Observable<Auto[]> {
-    return this.http.get<Auto[]>(this.API_URL);
+  getAutos(filters: any) {
+    let params = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== '') {
+        params = params.append(key, filters[key]);
+      }
+    });
+    return this.http.get<PagedResult<Auto>>(`${this.API_URL}`, { params });
+  }
+
+  getAll(): Observable<Auto[]> {
+    return this.http.get<Auto[]>(`${this.API_URL}/all`);
   }
 
   addAuto(auto: Auto): Observable<Auto> {
@@ -26,12 +36,21 @@ export class AutoService {
   deleteAuto(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
-  getLastInsurance(search?: string): Observable<Auto[]> {
-    let params = new HttpParams();
-    if (search) params = params.set('search', search);
+  getLastInsurance(filters?: any) {
+    const params = new URLSearchParams();
 
-    return this.http.get<Auto[]>(`${this.API_URL}/last-insurance`, { params });
+    if (filters) {
+      Object.keys(filters).forEach(key => {
+        if (filters[key] !== '' && filters[key] !== null && filters[key] !== undefined) {
+          params.append(key, filters[key]);
+        }
+      });
+    }
+
+    return this.http.get<any[]>(`${this.API_URL}/last-insurance?${params.toString()}`);
   }
-
+  getLastInsuranceAll(): Observable<Auto[]> {
+    return this.http.get<Auto[]>(`${this.API_URL}/lastInsuranceNPaged`);
+  }
 
 }

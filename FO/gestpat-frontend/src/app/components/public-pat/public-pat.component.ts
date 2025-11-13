@@ -5,12 +5,13 @@ import { PublicPatService } from '../../Services/public-pat.service';
 import { PublicPat } from '../../models/public-pat.model';
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, AlignmentType, BorderStyle, VerticalAlign } from "docx";
 import { saveAs } from "file-saver";
-import Swal from 'sweetalert2';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-public-pat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatPaginatorModule],
   templateUrl: './public-pat.component.html',
 })
 export class PublicPatComponent implements OnInit {
@@ -22,22 +23,68 @@ export class PublicPatComponent implements OnInit {
   isEditMode = false;
   formData: PublicPat = new PublicPat();
   searchMatricule: string = '';
+  page = 1;
+  pageSize = 5;
+  totalItems = 0;
 
-  constructor(private publicPatService: PublicPatService) { }
+  typeAr: string = '';
+  locationAr: string = '';
+  types: string[] = [
+    'فلاحي', 'سكني', 'تجاري',
+    'صناعي', 'غابوي',
+    'أرض عارية', 'أرض مجهزة',
+    'أرض فلاحية سقوية', 'أرض فلاحية بورية'
+  ];
+  locations: string[] = [
+    'فقرة', 'م. الفاسي', 'أولاد عزوز',
+    'لقفاف', 'گوفاف',
+    'بني يخلف', 'أولاد محمد',
+    'أولاد فارس', "جمعة"
+  ];
+
+  constructor(private publicPatService: PublicPatService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.getAll();
+    this.loadPublicPats();
+  }
+  loadPublicPats(search?: string): void {
+    this.publicPatService.getPagedPublicPats(
+      this.page,
+      this.pageSize,
+      this.searchMatricule?.trim() || '',
+      this.typeAr,
+      this.locationAr
+    ).subscribe({
+      next: (res) => {
+        this.publicPats = res.data;
+        this.totalItems = res.totalItems;
+      },
+      error: (err) => console.error(err)
+    });
+  }
+  onPageChange(event: PageEvent) {
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadPublicPats();
   }
 
-  getAll(): void {
-    this.publicPatService.getAll(this.searchMatricule).subscribe(
-      data => this.publicPats = data,
-      err => console.error(err)
-    );
+  applyFilters(): void {
+    this.page = 1;
+    this.loadPublicPats();
   }
 
   onSearch(): void {
-    this.getAll();
+    this.page = 1;
+    this.loadPublicPats(this.searchMatricule?.trim() || '');
+  }
+
+
+  resetFilters(): void {
+    this.typeAr = '';
+    this.locationAr = '';
+    this.searchMatricule = '';
+    this.page = 1;
+    this.loadPublicPats();
   }
 
   openDetail(p: PublicPat) {
@@ -66,75 +113,70 @@ export class PublicPatComponent implements OnInit {
     this.formData = new PublicPat();
   }
 
-  save() {
-    if (this.isEditMode) {
-      this.publicPatService.update(this.formData.id!, this.formData).subscribe({
+  save(form: NgForm) {
+    if (form.invalid) {
+      Object.values(form.controls).forEach(c => c.markAsTouched());
+      this.toastr.error('يرجى تصحيح الأخطاء في النموذج قبل الإرسال.', 'خطأ في النموذج');
+      return;
+    }
+
+    if (this.isEditMode && this.formData.id) {
+      this.publicPatService.update(this.formData.id, this.formData).subscribe({
         next: () => {
-          this.getAll();
+          this.loadPublicPats();
           this.closeForm();
-          Swal.fire({
-            icon: 'success',
-            title: 'تم التعديل بنجاح ',
-            text: 'تم تحديث بيانات الملك العمومي بنجاح',
-            confirmButtonText: 'موافق',
-          });
+          this.toastr.success('تم التعديل بنجاح', 'التعديل');
+        },
+        error: (err) => {
+          console.error('Erreur mise à jour PublicPat:', err);
+          this.toastr.error('حدث خطأ أثناء التعديل', 'خطأ');
         }
       });
     } else {
+      const exists = this.publicPats.some(p => p.registrationNumber === this.formData.registrationNumber);
+      if (exists) {
+        this.toastr.error('هذا الرقم مسجل مسبقاً', 'خطأ');
+        return;
+      }
+
       this.publicPatService.create(this.formData).subscribe({
         next: () => {
-          this.getAll();
+          this.loadPublicPats();
           this.closeForm();
-          Swal.fire({
-            icon: 'success',
-            title: 'تمت الإضافة بنجاح ',
-            text: 'تمت إضافة ملك عمومي جديد بنجاح',
-            confirmButtonText: 'موافق',
-          });
+          this.toastr.success('تم الإنشاء بنجاح', 'إنشاء');
+        },
+        error: (err) => {
+          console.error('Erreur création PublicPat:', err);
+          this.toastr.error('حدث خطأ أثناء الإنشاء', 'خطأ');
         }
       });
     }
   }
-  onSubmit(f: NgForm) {
-    if (f.invalid) {
-      Object.values(f.controls).forEach(control => control.markAsTouched());
-      Swal.fire({
-        icon: 'warning',
-        title: 'تحقق من الحقول',
-        text: 'يرجى ملء جميع الحقول المطلوبة قبل المتابعة',
-        confirmButtonText: 'حسنًا'
-      });
-      return;
-    }
-    this.save();
-  }
-
+ 
   delete(p: PublicPat) {
-    Swal.fire({
-      title: `هل أنت متأكد من حذف الملك "${p.registrationNumber}"؟`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'نعم، احذف',
-      cancelButtonText: 'إلغاء',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.publicPatService.delete(p.id!).subscribe({
-          next: () => {
-            this.getAll();
-            Swal.fire({
-              icon: 'success',
-              title: 'تم الحذف بنجاح ',
-              text: 'تم حذف الملك العمومي بنجاح',
-              confirmButtonText: 'موافق'
-            });
-          }
-        });
+    if (!p.id) return;
+
+    this.publicPatService.delete(p.id.toString()).subscribe({
+      next: () => {
+        this.loadPublicPats();
+        this.toastr.success('تم الحذف بنجاح', 'الحذف');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('حدث خطأ أثناء الحذف', 'خطأ');
       }
     });
   }
 
-  exportToWord(publicPats: PublicPat[]) {
+  exportToWord() {
+    this.publicPatService.getAll().subscribe({
+      next: (publicPats: PublicPat[]) => {
+        this.generateWordDoc(publicPats);
+      },
+      error: (err) => this.toastr.error('حدث خطأ أثناء جلب البيانات', 'خطأ')
+    });
+  }
+  generateWordDoc(publicPats: PublicPat[]) {
     if (!publicPats || publicPats.length === 0) return;
 
     const headers = [
@@ -210,5 +252,7 @@ export class PublicPatComponent implements OnInit {
     });
 
     Packer.toBlob(doc).then(blob => saveAs(blob, 'قائمة_الأملاك_العامة.docx'));
+    this.toastr.success('تم تصدير الملف بنجاح!', 'تصدير Word');
+
   }
 }
