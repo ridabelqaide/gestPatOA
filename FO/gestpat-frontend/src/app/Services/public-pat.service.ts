@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PublicPat } from '../models/public-pat.model';
 import { environment } from '../../Environments/environment';
+import { PagedResult } from '../models/paged-result.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,24 @@ export class PublicPatService {
     }
     return this.http.get<PublicPat[]>(this.API_URL, { params });
   }
+  getPagedPublicPats(
+    page: number,
+    pageSize: number,
+    registrationNumber?: string,
+    typeAr?: string,
+    locationAr?: string
+  ) {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    if (registrationNumber) params = params.set('registrationNumber', registrationNumber);
+    if (typeAr) params = params.set('typeAr', typeAr);
+    if (locationAr) params = params.set('locationAr', locationAr);
+
+    return this.http.get<PagedResult<PublicPat>>(`${this.API_URL}/paged`, { params });
+  }
+
 
   getById(id: string): Observable<PublicPat> {
     return this.http.get<PublicPat>(`${this.API_URL}/${id}`);

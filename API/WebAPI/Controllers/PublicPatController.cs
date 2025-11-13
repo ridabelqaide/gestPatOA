@@ -3,6 +3,8 @@ using PATOA.CORE.Entities;
 using PATOA.APPLICATION.Interfaces;
 using System;
 using System.Threading.Tasks;
+using PATOA.APPLICATION.DTOs;
+using PATOA.CORE.Entities;
 
 namespace PATOA.WebAPI.Controllers
 {
@@ -18,11 +20,23 @@ namespace PATOA.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicPat>>> GetAll([FromQuery] string? registrationNumber)
+        public async Task<ActionResult<IEnumerable<PublicPat>>> GetAll()
         {
-            var list = await _service.GetAllAsync(registrationNumber);
+            var list = await _service.GetAllAsync();
             return Ok(list);
         }
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<PublicPat>>> GetPaged(
+          [FromQuery] string? typeAr,
+          [FromQuery] string? locationAr,
+          [FromQuery] string? registrationNumber,
+          [FromQuery] int page = 1,
+          [FromQuery] int pageSize = 10)
+        {
+            var result = await _service.GetPagedAsync(typeAr, locationAr, registrationNumber, page, pageSize);
+            return Ok(result);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
