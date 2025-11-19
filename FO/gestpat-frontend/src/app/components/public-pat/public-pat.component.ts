@@ -7,6 +7,7 @@ import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, Align
 import { saveAs } from "file-saver";
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-public-pat',
@@ -42,7 +43,13 @@ export class PublicPatComponent implements OnInit {
     'أولاد فارس', "جمعة"
   ];
 
-  constructor(private publicPatService: PublicPatService, private toastr: ToastrService) { }
+  constructor(private publicPatService: PublicPatService, private toastr: ToastrService, private paginatorIntl: MatPaginatorIntl) {
+    this.paginatorIntl.itemsPerPageLabel = 'عدد العناصر لكل صفحة';
+    this.paginatorIntl.nextPageLabel = 'التالي';
+    this.paginatorIntl.previousPageLabel = 'السابق';
+    this.paginatorIntl.firstPageLabel = 'الأول';
+    this.paginatorIntl.lastPageLabel = 'الأخير';
+  }
 
   ngOnInit(): void {
     this.loadPublicPats();
@@ -140,7 +147,8 @@ export class PublicPatComponent implements OnInit {
       }
 
       this.publicPatService.create(this.formData).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('✔ PublicPat créé avec succès :', response); 
           this.loadPublicPats();
           this.closeForm();
           this.toastr.success('تم الإنشاء بنجاح', 'إنشاء');
@@ -189,7 +197,6 @@ export class PublicPatComponent implements OnInit {
     ];
 
 
-    // Ligne d'en-tête
     const headerRow = new TableRow({
       children: headers.map(h => new TableCell({
         children: [new Paragraph({ children: [new TextRun({ text: h, bold: true, size: 24 })] })],
@@ -204,7 +211,6 @@ export class PublicPatComponent implements OnInit {
       }))
     });
 
-    // Lignes de données
     const dataRows = publicPats.map(p => new TableRow({
       children: [
         new TableCell({ children: [new Paragraph(String(p.notesAr ?? ''))] }),
@@ -241,7 +247,7 @@ export class PublicPatComponent implements OnInit {
         {
           children: [
             new Paragraph({
-              children: [new TextRun({ text: 'قائمة الأملاك العامة', bold: true, size: 48 })],
+              children: [new TextRun({ text: 'ملك جماعي- عام -تابع للجماعة الترابية أولاد عبدون', bold: true, size: 48 })],
               alignment: AlignmentType.CENTER
             }),
             new Paragraph({ text: '' }),

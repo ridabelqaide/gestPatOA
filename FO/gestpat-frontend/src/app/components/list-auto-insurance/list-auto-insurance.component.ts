@@ -8,8 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import * as FileSaver from 'file-saver';
 import * as docx from 'docx';
-import { TableRow } from 'docx';
+import { TableRow, AlignmentType } from 'docx';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list-auto-insurance',
@@ -55,8 +56,15 @@ export class ListAutoInsuranceComponent implements OnInit {
   constructor(
     private autoService: AutoService,
     private insuranceService: InsuranceService,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private paginatorIntl: MatPaginatorIntl
+  ) {
+    this.paginatorIntl.itemsPerPageLabel = 'Éléments par page';
+    this.paginatorIntl.nextPageLabel = 'Suivant';
+    this.paginatorIntl.previousPageLabel = 'Précédent';
+    this.paginatorIntl.firstPageLabel = 'Premier';
+    this.paginatorIntl.lastPageLabel = 'Dernier';
+}
 
   ngOnInit(): void {
     this.loadAutosWithLastInsurance();
@@ -77,7 +85,7 @@ export class ListAutoInsuranceComponent implements OnInit {
     this.autoService.getLastInsurance(allFilters).subscribe({
       next: (res: any) => {
         const dataArray = Array.isArray(res.data) ? res.data : [];
-        this.totalItems = res.totalItems; // ← ici le total réel
+        this.totalItems = res.totalItems; 
 
         this.autos = dataArray.map((item: any) => ({
           id: item.enginId,
@@ -236,7 +244,7 @@ export class ListAutoInsuranceComponent implements OnInit {
 
     const tableRows: TableRow[] = [
       new TableRow({
-        children: ['N°', 'Véhicule', 'Compagnie', 'Type', 'Montant', 'Début', 'Fin']
+        children: ['N°', 'Véhicule', 'Compagnie', 'Type', 'Montant', 'Date Début', 'Date Fin']
           .map(header => new TableCell({ children: [new Paragraph({ text: header })] }))
       })
     ];
@@ -255,7 +263,23 @@ export class ListAutoInsuranceComponent implements OnInit {
       }));
     });
 
-    const doc = new Document({ sections: [{ children: [new Table({ rows: tableRows })] }] });
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              text: 'Liste des véhicules avec leur dernière assurance',
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 400 },
+            }),
+
+            new Table({
+              rows: tableRows,
+            }),
+          ],
+        },
+      ],
+    });
 
     Packer.toBlob(doc).then(blob => {
       FileSaver.saveAs(blob, 'liste_assurances_complet.docx');

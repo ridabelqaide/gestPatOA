@@ -1,121 +1,131 @@
-<div dir="rtl">
-  <div class="flex items-center gap-4">
-    <h2 class="flex-1 text-3xl font-bold text-gray-800">
+<div dir="rtl" class="p-4 bg-gradient-to-br from-blue-50 via-Indigo-50 to-purple-50 ">
+  <div class="flex items-center justify-between">
+    <h2 class="text-4xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
       لائحة الأملاك العمومية
     </h2>
+    <div class="flex gap-1">
+      <button (click)="openForm()" class="px-3 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:opacity-90 transition flex items-center gap-2" title="إضافة ملك عام">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        إضافة ملك عام
+      </button>
+      <button (click)="exportToWord()"
+              class="px-3 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:opacity-90 transition flex items-center gap-2" title="تحميل إلى Word">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        تحميل إلى Word
+      </button>
+    </div>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right my-6">
-    <div class="bg-white rounded-lg shadow p-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6">
+    <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-md shadow-xl border border-indigo-100 hover:shadow-2xl transition">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">إجمالي الممتلكات</h3>
       <p class="text-3xl font-bold text-blue-600">€ 0</p>
       <p class="text-sm text-gray-500 mt-1">+0% هذا الشهر</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-md shadow-xl border border-green-100 hover:shadow-2xl transition">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">الاستثمارات</h3>
       <p class="text-3xl font-bold text-green-600">0</p>
       <p class="text-sm text-gray-500 mt-1">الأصول في المحفظة</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="p-6 rounded-2xl bg-white/80 backdrop-blur-md shadow-xl border border-purple-100 hover:shadow-2xl transition">
       <h3 class="text-lg font-semibold text-gray-900 mb-2">العائد</h3>
       <p class="text-3xl font-bold text-purple-600">0%</p>
       <p class="text-sm text-gray-500 mt-1">الأداء السنوي</p>
     </div>
   </div>
-  <div class="mb-4 flex justify-between items-center my-9">
-    <div class="flex items-center gap-2 flex-grow max-w-lg">
+  <div class="mb-6 flex flex-wrap justify-between shadow-md items-center gap-4 bg-white shadow p-4 rounded-full">
+    <div class="relative flex items-center gap-2 flex-grow max-w-lg">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+      </svg>
       <input type="text" [(ngModel)]="searchMatricule"
              (ngModelChange)="onSearch()"
              placeholder="ابحث برقم التقييد"
-             class="border px-2 py-2 rounded w-full">
+         class="border px-2 py-2 pr-8 rounded-full w-full">
 
     </div>
     <div class="flex justify-between items-center py-4 gap-6">
       <select [(ngModel)]="typeAr" (change)="applyFilters()"
-              class="border rounded-lg px-2 w-28 py-3 text-sm">
+              class="border rounded-full px-4 w-40 py-3 text-md font-bold bg-white">
         <option value=""> الأنواع</option>
         <option *ngFor="let type of types" [value]="type">{{ type }}</option>
       </select>
 
       <select [(ngModel)]="locationAr" (change)="applyFilters()"
-              class="border rounded-lg px-4 w-28 py-3 text-sm">
+              class="border rounded-full px-4 w-40 font-bold py-3 text-md bg-white">
         <option value=""> المواقع</option>
         <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
       </select>
 
       <button (click)="resetFilters()"
-              class=" bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              class="flex items-center gap-1 bg-sky-700 hover:bg-sky-800 w-32 text-white px-4 py-2 rounded-full shadow-md transition duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
         </svg>
-
-      </button>
-    </div>
-    <div class="flex gap-1">
-      <button (click)="openForm()" class="flex gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded ml-4 items-center" title="إضافة ملك عام">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-             class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-      </button>
-      <button (click)="exportToWord()"
-              class="flex gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2s rounded items-center" title="تحميل إلى Word">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-        </svg>
+        إعادة الضبط
       </button>
     </div>
   </div>
 
-  <table class="min-w-full border border-gray-300 text-center">
-    <thead class="bg-blue-100">
-      <tr>
-        <th class="border px-2 py-1">رقم</th>
-        <th class="border px-2 py-1">رقم التقييد</th>
-        <th class="border px-2 py-1">النـــــــــــــوع</th>
-        <th class="border px-2 py-1">الموقع</th>
-        <th class="border px-2 py-1">إجراءات</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of publicPats; let i = index" class="hover:bg-gray-50">
-        <td class="border px-2 py-1">{{ i + 1 }}</td>
-        <td class="border px-2 py-1">{{ p.registrationNumber }}</td>
-        <td class="border px-2 py-1">{{ p.typeAr }}</td>
-        <td class="border px-2 py-1">{{ p.locationAr }}</td>
+  <div class="overflow-y-auto max-h-[350px] rounded-2xl shadow-lg border border-gray-200 bg-white">
+    <table class="min-w-full text-sm ">
+      <thead class="bg-indigo-100 text-indigo-800 text-right">
+        <tr class="font-bold text-lg">
+          <th class="border px-2 py-1">رقم</th>
+          <th class="border px-2 py-1">رقم التقييد</th>
+          <th class="border px-2 py-1">النـــــــــــــوع</th>
+          <th class="border px-2 py-1">الموقع</th>
+          <th class="border px-2 py-1">إجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of publicPats; let i = index" class="hover:bg-gray-50">
+          <td class="border px-2 py-1">{{ i + 1 }}</td>
+          <td class="border px-2 py-1 text-indigo-700 font-semibold">{{ p.registrationNumber }}</td>
+          <td class="border px-2 py-1">{{ p.typeAr }}</td>
+          <td class="border px-2 py-1">{{ p.locationAr }}</td>
 
-        <td class="border px-2 py-1 text-center flex justify-center gap-2">
-          <button (click)="openDetail(p)" class="p-2 rounded hover:bg-gray-200" title="عرض التفاصيل">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6  text-blue-500">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
+          <td class="border px-2 py-2 flex gap-3">
+            <button (click)="openDetail(p)"  class="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition shadow-sm" title="عرض التفاصيل">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6  text-blue-700">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
 
-          </button>
+            </button>
 
-          <button (click)="openForm(p)" class="p-2 rounded hover:bg-gray-200" title="تعديل">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-yellow-500">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-            </svg>
+            <button (click)="openForm(p)"  class="p-2 rounded-full bg-yellow-100 hover:bg-yellow-200 transition shadow-sm" title="تعديل">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-yellow-500">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
 
-          </button>
+            </button>
 
-          <button (click)="delete(p)" class="p-2 rounded hover:bg-gray-200" title="حذف">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6  text-red-500">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-            </svg>
+            <button (click)="delete(p)"  class="p-2 rounded-full bg-red-100 hover:bg-red-200 transition shadow-sm" title="حذف">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6  text-red-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
 
-          </button>
-        </td>
+            </button>
+          </td>
 
-      </tr>
-    </tbody>
-  </table>
-  <mat-paginator [length]="totalItems"
-                 [pageSize]="pageSize"
-                 [pageSizeOptions]="[5, 10, 20]"
-                 (page)="onPageChange($event)">
-  </mat-paginator>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-6 flex justify-end">
+    <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="[5,10,20]" (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
 </div>
 
 <!-- Modal détails -->
@@ -131,7 +141,7 @@
         <tr><td class="px-2 py-1 font-semibold">المرجع و تاريخ تسجيله بإدارة التسجيل</td><td class="px-2 py-1">{{ selectedPat?.registrationReference }} | {{ selectedPat?.registrationDate | date:'dd/MM/yyyy' }}</td></tr>
         <tr><td class="px-2 py-1 font-semibold">المساحة</td><td class="px-2 py-1">{{ selectedPat?.area }}</td></tr>
         <tr><td class="px-2 py-1 font-semibold">الموقع</td><td class="px-2 py-1">{{ selectedPat?.locationAr }}</td></tr>
-        <tr><td class="px-2 py-1 font-semibold">الإحداثيات الجغرافية</td><td class="px-2 py-1">العرض: {{ selectedPat?.latitude }}, العرض: {{ selectedPat?.longitude }}</td></tr>
+        <tr><td class="px-2 py-1 font-semibold">الإحداثيات الجغرافية</td><td class="px-2 py-1">العرض: {{ selectedPat?.latitude }}, الطول: {{ selectedPat?.longitude }}</td></tr>
         <tr><td class="px-2 py-1 font-semibold">مصدر تملك العقــار</td><td class="px-2 py-1">{{ selectedPat?.acquisitionSourceAr }}</td></tr>
         <tr><td class="px-2 py-1 font-semibold">ثمن الاقتنـاء</td><td class="px-2 py-1">{{ selectedPat?.purchasePrice }}</td></tr>
         <tr><td class="px-2 py-1 font-semibold">الأساس القانوني المعتمد لترتيب العقار ضمن الأملاك العامة</td><td class="px-2 py-1">{{ selectedPat?.legalBasisAr }}</td></tr>
@@ -152,171 +162,173 @@
     </table>
 
     <div class="text-center mt-4">
-      <button (click)="closeDetail()" class="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg">إغلاق</button>
+      <button (click)="closeDetail()" class="bg-gray-400 hover:bg-gray-500 text-white px-8 py-2 rounded-full">إغلاق</button>
     </div>
   </div>
 </div>
 
 <!-- Modal ajout et modif -->
 <div *ngIf="isFormModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-   <div class="bg-white rounded-2xl shadow-xl w-11/12 md:w-4/5 lg:w-3/4 p-6 max-h-[90vh] overflow-y-auto" dir="rtl">
-     <h3 class="text-2xl font-bold mb-6 text-center">{{ isEditMode ? 'تعديل الملك العام' : 'إضافة ملك عام' }}</h3>
+  <div class="bg-white rounded-2xl shadow-xl w-11/12 md:w-4/5 lg:w-3/4 p-6 max-h-[90vh] overflow-y-auto" dir="rtl">
+    <h3 class="text-2xl font-bold mb-6 text-center">{{ isEditMode ? 'تعديل الملك العام' : 'إضافة ملك عام' }}</h3>
 
-     <form #f="ngForm" (ngSubmit)="save(f)"  class="space-y-4">
+    <form #f="ngForm" (ngSubmit)="save(f)" class="space-y-4">
+      <input type="hidden" [(ngModel)]="formData.id" name="id" />
 
-       <input type="hidden" [(ngModel)]="formData.id" name="id" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold mb-1">رقم التقييد في السجل</label>
+          <input type="text" [(ngModel)]="formData.registrationNumber" name="registrationNumber" #registrationNumber="ngModel" required
+                 placeholder="أدخل رقم التقييد" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="registrationNumber.invalid && registrationNumber.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">رقم التقييد في السجل</label>
-           <input type="text" [(ngModel)]="formData.registrationNumber" name="registrationNumber" #registrationNumber="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="registrationNumber.invalid && registrationNumber.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">النـــــــــــــوع</label>
+          <input type="text" [(ngModel)]="formData.typeAr" name="typeAr" #typeAr="ngModel" required
+                 placeholder="أدخل النوع" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="typeAr.invalid && typeAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">النـــــــــــــوع</label>
-           <input type="text" [(ngModel)]="formData.typeAr" name="typeAr" #typeAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="typeAr.invalid && typeAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">المراجع العقارية للملك</label>
+          <input type="text" [(ngModel)]="formData.landReferencesAr" name="landReferencesAr" #landReferencesAr="ngModel" required
+                 placeholder="أدخل المراجع العقارية" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="landReferencesAr.invalid && landReferencesAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">المراجع العقارية للملك</label>
-           <input type="text" [(ngModel)]="formData.landReferencesAr" name="landReferencesAr"  #landReferencesAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="landReferencesAr.invalid && landReferencesAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">المرجع و تاريخ تسجيله بإدارة التسجيل</label>
+          <input type="text" [(ngModel)]="formData.registrationReference" name="registrationReference" #registrationReference="ngModel" required
+                 placeholder="أدخل المرجع" class="w-full border px-2 py-1 rounded mb-1" />
+          <input type="date" [(ngModel)]="formData.registrationDate" name="registrationDate" #registrationDate="ngModel" required
+                 placeholder="اختر التاريخ" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="registrationReference.invalid && registrationReference.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">المرجع و تاريخ تسجيله بإدارة التسجيل</label>
-           <input type="text" [(ngModel)]="formData.registrationReference" name="registrationReference" #registrationReference="ngModel" required class="w-full border px-2 py-1 rounded mb-1" />
-           <input type="date" [(ngModel)]="formData.registrationDate" name="registrationDate" #registrationDate="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="registrationReference.invalid && registrationReference.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">المساحة</label>
+          <input type="number" [(ngModel)]="formData.area" name="area" #area="ngModel" required placeholder="أدخل المساحة بالمتر²" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="area.invalid && area.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">المساحة</label>
-           <input type="number" [(ngModel)]="formData.area" name="area" #area="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="area.invalid && area.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الموقع</label>
+          <input type="text" [(ngModel)]="formData.locationAr" name="locationAr" #locationAr="ngModel" required placeholder="أدخل الموقع" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="locationAr.invalid && locationAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الموقع</label>
-           <input type="text" [(ngModel)]="formData.locationAr" name="locationAr" #locationAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="locationAr.invalid && locationAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الإحداثيات الجغرافية</label>
+          <input type="number" [(ngModel)]="formData.latitude" name="latitude" #latitude="ngModel" required placeholder="العرض" class="w-full border px-2 py-1 rounded mb-1" />
+          <input type="number" [(ngModel)]="formData.longitude" name="longitude" #longitude="ngModel" required placeholder="الطول" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="(latitude.invalid && latitude.touched) || (longitude.invalid && longitude.touched)" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الإحداثيات الجغرافية</label>
-           <input type="number" [(ngModel)]="formData.latitude" name="latitude" #latitude="ngModel" required placeholder="العرض" class="w-full border px-2 py-1 rounded mb-1" />
-           <input type="number" [(ngModel)]="formData.longitude" name="longitude" #longitude="ngModel" required placeholder="الطول" class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="(latitude.invalid && latitude.touched) || (longitude.invalid && longitude.touched)"
-              class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">مصدر تملك العقــار</label>
+          <input type="text" [(ngModel)]="formData.acquisitionSourceAr" name="acquisitionSourceAr" #acquisitionSourceAr="ngModel" required placeholder="أدخل مصدر التملك" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="acquisitionSourceAr.invalid && acquisitionSourceAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">مصدر تملك العقــار</label>
-           <input type="text" [(ngModel)]="formData.acquisitionSourceAr" name="acquisitionSourceAr" #acquisitionSourceAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="acquisitionSourceAr.invalid && acquisitionSourceAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">ثمن الاقتنـاء</label>
+          <input type="number" [(ngModel)]="formData.purchasePrice" name="purchasePrice" #purchasePrice="ngModel" required placeholder="أدخل الثمن" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="purchasePrice.invalid && purchasePrice.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">ثمن الاقتنـاء</label>
-           <input type="number" [(ngModel)]="formData.purchasePrice" name="purchasePrice" #purchasePrice="ngModel" required  class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="purchasePrice.invalid && purchasePrice.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الأساس القانوني المعتمد لترتيب العقار ضمن الأملاك العامة</label>
+          <input type="text" [(ngModel)]="formData.legalBasisAr" name="legalBasisAr" #legalBasisAr="ngModel" required placeholder="أدخل الأساس القانوني" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="legalBasisAr.invalid && legalBasisAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الأساس القانوني المعتمد لترتيب العقار ضمن الأملاك العامة</label>
-           <input type="text" [(ngModel)]="formData.legalBasisAr" name="legalBasisAr" #legalBasisAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="legalBasisAr.invalid && legalBasisAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">التخصيص حسب وثائق التعمير</label>
+          <input type="text" [(ngModel)]="formData.zoningDesignationAr" name="zoningDesignationAr" #zoningDesignationAr="ngModel" required placeholder="أدخل التخصيص" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="zoningDesignationAr.invalid && zoningDesignationAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">التخصيص حسب وثائق التعمير</label>
-           <input type="text" [(ngModel)]="formData.zoningDesignationAr" name="zoningDesignationAr" #zoningDesignationAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="zoningDesignationAr.invalid && zoningDesignationAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الاستعمال الفعلي</label>
+          <input type="text" [(ngModel)]="formData.currentUseAr" name="currentUseAr" #currentUseAr="ngModel" required placeholder="أدخل الاستعمال الفعلي" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="currentUseAr.invalid && currentUseAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الاستعمال الفعلي</label>
-           <input type="text" [(ngModel)]="formData.currentUseAr" name="currentUseAr" #currentUseAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="currentUseAr.invalid && currentUseAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">القيمة التداولية للعقـار</label>
+          <input type="number" [(ngModel)]="formData.marketValue" name="marketValue" #marketValue="ngModel" required placeholder="أدخل القيمة" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="marketValue.invalid && marketValue.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">القيمة التداولية للعقـار</label>
-           <input type="number" [(ngModel)]="formData.marketValue" name="marketValue" #marketValue="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="marketValue.invalid && marketValue.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الاستغلال الخصوصي من طرف الغير</label>
+          <input type="text" [(ngModel)]="formData.privateUseDetailsAr" name="privateUseDetailsAr" #privateUseDetailsAr="ngModel" required placeholder="أدخل تفاصيل الاستغلال" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="privateUseDetailsAr.invalid && privateUseDetailsAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الاستغلال الخصوصي من طرف الغير</label>
-           <input type="text" [(ngModel)]="formData.privateUseDetailsAr" name="privateUseDetailsAr" #privateUseDetailsAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="privateUseDetailsAr.invalid && privateUseDetailsAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">تاريخ إبرام سند الترخيص بالاستغلال</label>
+          <input type="date" [(ngModel)]="formData.occupationPermitDate" name="occupationPermitDate" #occupationPermitDate="ngModel" required placeholder="اختر التاريخ" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="occupationPermitDate.invalid && occupationPermitDate.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">تاريخ إبرام سند الترخيص بالاستغلال</label>
-           <input type="date" [(ngModel)]="formData.occupationPermitDate" name="occupationPermitDate" #occupationPermitDate="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="occupationPermitDate.invalid && occupationPermitDate.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">الشخص المرخص له بالاحتلال المؤقت</label>
+          <input type="text" [(ngModel)]="formData.authorizedPersonAr" name="authorizedPersonAr" #authorizedPersonAr="ngModel" required placeholder="أدخل اسم الشخص" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="authorizedPersonAr.invalid && authorizedPersonAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">الشخص المرخص له بالاحتلال المؤقت</label>
-           <input type="text" [(ngModel)]="formData.authorizedPersonAr" name="authorizedPersonAr" #authorizedPersonAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="authorizedPersonAr.invalid && authorizedPersonAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">مدة الاحتلال المؤقت</label>
+          <input type="number" [(ngModel)]="formData.temporaryOccupationDuration" name="temporaryOccupationDuration" #temporaryOccupationDuration="ngModel" required placeholder="أدخل مدة الاحتلال" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="temporaryOccupationDuration.invalid && temporaryOccupationDuration.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">مدة الاحتلال المؤقت</label>
-           <input type="text" [(ngModel)]="formData.temporaryOccupationDuration" name="temporaryOccupationDuration" #temporaryOccupationDuration="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="temporaryOccupationDuration.invalid && temporaryOccupationDuration.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">مدة إتاوة الاحتلال</label>
+          <input type="number" [(ngModel)]="formData.occupationFeeDuration" name="occupationFeeDuration" #occupationFeeDuration="ngModel" required placeholder="أدخل مدة الإتاوة" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="occupationFeeDuration.invalid && occupationFeeDuration.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">مدة إتاوة الاحتلال</label>
-           <input type="text" [(ngModel)]="formData.occupationFeeDuration" name="occupationFeeDuration" #occupationFeeDuration="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="occupationFeeDuration.invalid && occupationFeeDuration.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">مبلغ إتاوة الاحتلال</label>
+          <input type="number" [(ngModel)]="formData.occupationFeeAmount" name="occupationFeeAmount" #occupationFeeAmount="ngModel" required placeholder="أدخل المبلغ" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="occupationFeeAmount.invalid && occupationFeeAmount.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">مبلغ إتاوة الاحتلال</label>
-           <input type="number" [(ngModel)]="formData.occupationFeeAmount" name="occupationFeeAmount" #occupationFeeAmount="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="occupationFeeAmount.invalid && occupationFeeAmount.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">نسبة الزيادة</label>
+          <input type="number" [(ngModel)]="formData.increaseRatePercent" name="increaseRatePercent" #increaseRatePercent="ngModel" required placeholder="أدخل النسبة" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="increaseRatePercent.invalid && increaseRatePercent.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">نسبة الزيادة</label>
-           <input type="number" [(ngModel)]="formData.increaseRatePercent" name="increaseRatePercent" #increaseRatePercent="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="increaseRatePercent.invalid && increaseRatePercent.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">أجل و كيفيات أداء إتاوة الاحتلال المؤقت</label>
+          <input type="text" [(ngModel)]="formData.paymentDeadlinesAndMethodsAr" name="paymentDeadlinesAndMethodsAr" #paymentDeadlinesAndMethodsAr="ngModel" required placeholder="أدخل التفاصيل" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="paymentDeadlinesAndMethodsAr.invalid && paymentDeadlinesAndMethodsAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">أجل و كيفيات أداء إتاوة الاحتلال المؤقت</label>
-           <input type="text" [(ngModel)]="formData.paymentDeadlinesAndMethodsAr" name="paymentDeadlinesAndMethodsAr" #paymentDeadlinesAndMethodsAr="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="paymentDeadlinesAndMethodsAr.invalid && paymentDeadlinesAndMethodsAr.touched" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">مرجع و تاريخ إخراج العقار من الملك العام</label>
+          <input type="text" [(ngModel)]="formData.removalFromPublicDomainReference" name="removalFromPublicDomainReference" #removalFromPublicDomainReference="ngModel" required placeholder="أدخل المرجع" class="w-full border px-2 py-1 rounded mb-1" />
+          <input type="date" [(ngModel)]="formData.removalFromPublicDomainDate" name="removalFromPublicDomainDate" #removalFromPublicDomainDate="ngModel" required placeholder="اختر التاريخ" class="w-full border px-2 py-1 rounded" />
+          <p *ngIf="(removalFromPublicDomainReference.invalid && removalFromPublicDomainReference.touched) || (removalFromPublicDomainDate.invalid && removalFromPublicDomainDate.touched)" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">مرجع و تاريخ إخراج العقار من الملك العام</label>
-           <input type="text" [(ngModel)]="formData.removalFromPublicDomainReference" name="removalFromPublicDomainReference" #removalFromPublicDomainReference="ngModel" required class="w-full border px-2 py-1 rounded mb-1" />
-           <input type="date" [(ngModel)]="formData.removalFromPublicDomainDate" name="removalFromPublicDomainDate" #removalFromPublicDomainDate="ngModel" required class="w-full border px-2 py-1 rounded" />
-           <p *ngIf="(removalFromPublicDomainReference.invalid && removalFromPublicDomainReference.touched) || (removalFromPublicDomainDate.invalid && removalFromPublicDomainDate.touched)" class="text-red-500 text-sm mt-1">هذا الحقل إلزامي</p>
-         </div>
+        <div>
+          <label class="block font-semibold mb-1">ملاحظات</label>
+          <textarea [(ngModel)]="formData.notesAr" name="notesAr" #notesAr="ngModel" placeholder="أدخل أي ملاحظات" class="w-full border px-2 py-1 rounded"></textarea>
+        </div>
 
-         <div>
-           <label class="block font-semibold mb-1">ملاحظات</label>
-           <textarea [(ngModel)]="formData.notesAr" name="notesAr" #notesAr="ngModel"
-                     class="w-full border px-2 py-1 rounded"></textarea>
-         </div>
+      </div>
 
-       </div>
+      <div class="text-center mt-4 flex justify-center gap-4">
+        <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-2 rounded-full">{{ isEditMode ? 'تحديث' : 'إضافة' }}</button>
+        <button type="button" (click)="closeForm()" class="bg-gray-400 hover:bg-gray-500 text-white px-8 py-2 rounded-full">إلغاء</button>
+      </div>
 
-       <div class="text-center mt-4 flex justify-center gap-4">
-         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">{{ isEditMode ? 'تحديث' : 'إضافة' }}</button>
-         <button type="button" (click)="closeForm()" class="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg">إلغاء</button>
-       </div>
-
-     </form>
-   </div>
+    </form>
+  </div>
 </div>

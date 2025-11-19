@@ -8,6 +8,7 @@ import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, Width
 import { saveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-automobile-list',
@@ -38,7 +39,13 @@ export class AutomobileListComponent implements OnInit {
     type: '',
     dateRange: ''
   };
-  constructor(private autoService: AutoService, private toastr: ToastrService) { }
+  constructor(private autoService: AutoService, private toastr: ToastrService, private paginatorIntl: MatPaginatorIntl) {
+    this.paginatorIntl.itemsPerPageLabel = 'Éléments par page';
+    this.paginatorIntl.nextPageLabel = 'Suivant';
+    this.paginatorIntl.previousPageLabel = 'Précédent';
+    this.paginatorIntl.firstPageLabel = 'Premier';
+    this.paginatorIntl.lastPageLabel = 'Dernier';
+}
 
   ngOnInit(): void {
     this.loadAutos();
@@ -176,9 +183,18 @@ export class AutomobileListComponent implements OnInit {
   private generateWordDoc(engins: Auto[]) {
     const tableRows: TableRow[] = [];
 
-    const headers = ["N", "Matricule", "Genre", "Type", "Marque", "Carburant", "Acquisition", "Date Mise Circulation", "État"];
+    const headers = [
+      "N°", "Matricule", "Genre", "Type", "Marque",
+      "Mode de Carburant", "Acquisition", "Date Mise en service",
+      "État de véhicule"
+    ];
+
     tableRows.push(new TableRow({
-      children: headers.map(h => new TableCell({ children: [new Paragraph(h)] }))
+      children: headers.map(h =>
+        new TableCell({
+          children: [new Paragraph({ text: h })]
+        })
+      )
     }));
 
     engins.forEach((v, i) => {
@@ -197,11 +213,56 @@ export class AutomobileListComponent implements OnInit {
       }));
     });
 
+
+    const headerParagraphs = [
+      new Paragraph({
+        alignment: "left",
+        children: [new TextRun({ text: "Royaume du Maroc", bold: true })],
+      }),
+      new Paragraph({
+        alignment: "left",
+        children: [new TextRun({ text: "Ministère de l’Intérieur", bold: true })],
+      }),
+      new Paragraph({
+        alignment: "left",
+        children: [new TextRun({ text: "Province de Khouribga", bold: true })],
+      }),
+      new Paragraph({
+        alignment: "left",
+        children: [new TextRun({ text: "Cercle de Khouribga", bold: true })],
+      }),
+      new Paragraph({
+        alignment: "left",
+        children: [new TextRun({ text: "Caïdat Ouled Abdoune", bold: true })],
+      }),
+      new Paragraph({
+        alignment: "left",
+        spacing: { after: 300 },
+        children: [new TextRun({ text: "Commune Ouled Abdoune", bold: true })],
+      }),
+
+      new Paragraph({
+        alignment: "center",
+        spacing: { after: 400 },
+        children: [
+          new TextRun({
+            text: "le parc automobile de la commune Ouled Abdoune ",
+            bold: true,
+            underline: {},   
+            size: 36,
+          })
+        ]
+      })
+    ];
+
     const doc = new Document({
       sections: [{
         children: [
-          new Paragraph({ children: [new TextRun({ text: "Liste des Véhicules", bold: true, size: 36 })], spacing: { after: 400 } }),
-          new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: tableRows })
+          ...headerParagraphs,
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            rows: tableRows
+          })
         ]
       }]
     });
@@ -211,5 +272,6 @@ export class AutomobileListComponent implements OnInit {
       this.toastr.success('Export Word effectué avec succès !', 'Export Word');
     });
   }
+
 
 }
