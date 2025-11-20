@@ -59,19 +59,20 @@
 
       <select #genreSelect (change)="onFilterChange('genre', genreSelect.value)"
               class="px-2 py-2 w-40 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200 transition">
-        <option value="">Genre</option>
+        <option value="">les genres</option>
         <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
       </select>
 
       <select #typeSelect (change)="onFilterChange('type', typeSelect.value)"
               class="px-2 py-2 w-40 rounded-full bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 transition">
-        <option value="">Type</option>
-        <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+        <option value=""> Les types</option>
+        <option *ngFor="let type of types" [value]="type.name">{{ type.name }}</option>
       </select>
+
 
       <select #dateSelect (change)="onFilterChange('dateRange', dateSelect.value)"
               class="px-2 py-2 w-40 rounded-full bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 transition">
-        <option value="">Date</option>
+        <option value="">les dates</option>
         <option value="week">Cette semaine</option>
         <option value="month">Ce mois</option>
         <option value="year">Cette année</option>
@@ -110,7 +111,7 @@
           <td class="px-4 py-3">{{ (page - 1) * pageSize + i + 1 }}</td>
           <td class="px-4 py-3 font-semibold text-indigo-700">{{ auto.matricule }}</td>
           <td class="px-4 py-3">{{ auto.genre }}</td>
-          <td class="px-4 py-3">{{ auto.type }}</td>
+          <td class="px-4 py-3">{{ auto.enginTypeName }}</td>
           <td class="px-4 py-3">{{ auto.marque }}</td>
           <td class="px-4 py-3">{{ auto.modeCarburant }}</td>
           <td class="px-4 py-3">{{ auto.acquisition }}</td>
@@ -174,10 +175,13 @@
 
       <div>
         <label class="font-semibold text-gray-700">Type</label>
-        <input type="text" placeholder="Type"
-               [(ngModel)]="autoForm.type"
-               class="mt-1 border rounded-xl px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <select [(ngModel)]="autoForm.enginTypeCode"
+                class="mt-1 border rounded-xl px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="">Sélectionner un type</option>
+          <option *ngFor="let type of types" [value]="type.code">{{ type.name }}</option>
+        </select>
       </div>
+
 
       <div>
         <label class="font-semibold text-gray-700">Marque</label>
