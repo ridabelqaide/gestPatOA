@@ -7,6 +7,7 @@ import { PrivatePatService } from '../../Services/private-pat.service';
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, AlignmentType, BorderStyle, VerticalAlign } from "docx";
 import { saveAs } from "file-saver";
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-private-pat',
@@ -45,7 +46,13 @@ export class PrivatePatComponent implements OnInit {
 
   formData: PrivatePat = this.getEmptyFormData();
 
-  constructor(private privatePatService: PrivatePatService, private toastr: ToastrService) { }
+  constructor(private privatePatService: PrivatePatService, private toastr: ToastrService, private paginatorIntl: MatPaginatorIntl) {
+    this.paginatorIntl.itemsPerPageLabel = 'عدد العناصر لكل صفحة';
+    this.paginatorIntl.nextPageLabel = 'التالي';
+    this.paginatorIntl.previousPageLabel = 'السابق';
+    this.paginatorIntl.firstPageLabel = 'الأول';
+    this.paginatorIntl.lastPageLabel = 'الأخير';
+   }
 
   ngOnInit(): void {
     this.loadPrivatePats();
@@ -275,7 +282,7 @@ export class PrivatePatComponent implements OnInit {
 
     const doc = new Document({
       sections: [
-        { children: [new Paragraph({ text: 'قائمة الأملاك الخاصة', alignment: AlignmentType.CENTER, spacing: { after: 400 } }), table] }
+        { children: [new Paragraph({ text: 'ملك جماعي- خاص -تابع للجماعة الترابية أولاد عبدون', alignment: AlignmentType.CENTER, spacing: { after: 400 } }), table] }
       ]
     });
 

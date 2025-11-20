@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PATOA.INFRA.Data;
 
@@ -11,9 +12,11 @@ using PATOA.INFRA.Data;
 namespace INFRA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119211123_addEnginType")]
+    partial class addEnginType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +157,7 @@ namespace INFRA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Acquisition")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -166,6 +170,7 @@ namespace INFRA.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("EnginTypeCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Etat")
@@ -174,6 +179,7 @@ namespace INFRA.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Genre")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -192,10 +198,11 @@ namespace INFRA.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Matricule")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("MiseCirculationDate")
+                    b.Property<DateTime>("MiseCirculationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModeCarburant")
@@ -210,10 +217,10 @@ namespace INFRA.Migrations
                     b.Property<string>("PuissanceFiscal")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("TH")
+                    b.Property<decimal>("TH")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("TJ")
+                    b.Property<decimal>("TJ")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UpdatedBy")
@@ -229,8 +236,7 @@ namespace INFRA.Migrations
                     b.HasIndex("EnginTypeCode");
 
                     b.HasIndex("Matricule")
-                        .IsUnique()
-                        .HasFilter("[Matricule] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Engins");
                 });
@@ -277,7 +283,7 @@ namespace INFRA.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("EnginTypes");
+                    b.ToTable("EnginType");
                 });
 
             modelBuilder.Entity("PATOA.CORE.Entities.Insurance", b =>
@@ -778,7 +784,9 @@ namespace INFRA.Migrations
                 {
                     b.HasOne("PATOA.CORE.Entities.EnginType", "EnginType")
                         .WithMany("Engins")
-                        .HasForeignKey("EnginTypeCode");
+                        .HasForeignKey("EnginTypeCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EnginType");
                 });

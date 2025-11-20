@@ -34,25 +34,25 @@ namespace PATOA.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<Engin>>> GetAll(
-     [FromQuery] string? matricule = null,
-     [FromQuery] string? genre = null,
-     [FromQuery] string? type = null,
-     [FromQuery] string? dateRange = null,
-     [FromQuery] int page = 1,
-     [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<object>>> GetAll(
+         [FromQuery] string? matricule = null,
+         [FromQuery] string? genre = null,
+         [FromQuery] string? type = null,
+         [FromQuery] string? dateRange = null,
+         [FromQuery] int page = 1,
+         [FromQuery] int pageSize = 10)
         {
             page = page <= 0 ? 1 : page;
             pageSize = pageSize <= 0 ? 10 : pageSize;
 
-            var query = _context.Engins.AsQueryable();
+            var query = _context.Engins.Include(e => e.EnginType).AsQueryable();
 
             if (!string.IsNullOrEmpty(matricule))
                 query = query.Where(e => e.Matricule.Contains(matricule));
             if (!string.IsNullOrEmpty(genre))
                 query = query.Where(e => e.Genre.Contains(genre));
             if (!string.IsNullOrEmpty(type))
-                query = query.Where(e => e.Type.Contains(type));
+                query = query.Where(e => e.EnginType != null && e.EnginType.Name.Contains(type));
 
             if (!string.IsNullOrEmpty(dateRange))
             {
@@ -83,12 +83,28 @@ namespace PATOA.WebAPI.Controllers
             var totalItems = await query.CountAsync();
 
             var engins = await query
-                .OrderByDescending(e => e.CreatedOn)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+     .OrderByDescending(e => e.CreatedOn)
+     .Skip((page - 1) * pageSize)
+     .Take(pageSize)
+     .Select(e => new EnginDto
+     {
+         Id = e.Id,
+         Marque = e.Marque,
+         Model = e.Model,
+         Matricule = e.Matricule,
+         Genre = e.Genre,
+         EnginTypeCode = e.EnginTypeCode,
+         EnginTypeName = e.EnginType != null ? e.EnginType.Name : null,
+         EnginTypeDescription = e.EnginType != null ? e.EnginType.Description : null,
+         PuissanceFiscal = e.PuissanceFiscal,
+         MiseCirculationDate = e.MiseCirculationDate,
+         ModeCarburant = e.ModeCarburant,
+         Acquisition = e.Acquisition,
+         Etat = e.Etat
+     })
+     .ToListAsync();
 
-            var result = new PagedResult<Engin>
+            var result = new PagedResult<EnginDto>
             {
                 Data = engins,
                 TotalItems = totalItems,
@@ -137,7 +153,7 @@ namespace PATOA.WebAPI.Controllers
             [FromQuery] string? matricule = null,
             [FromQuery] string? type = null,
             [FromQuery] string? company = null,
-            [FromQuery] string? dateRange = null, // ← ajout du paramètre
+            [FromQuery] string? dateRange = null, 
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
@@ -145,6 +161,7 @@ namespace PATOA.WebAPI.Controllers
             pageSize = pageSize <= 0 ? 10 : pageSize;
 
             var query = _context.Engins
+                .Include(e => e.EnginType) 
                 .Select(e => new
                 {
                     Engin = e,
@@ -160,7 +177,8 @@ namespace PATOA.WebAPI.Controllers
                 query = query.Where(x => x.Engin.Matricule.Contains(matricule));
 
             if (!string.IsNullOrEmpty(type))
-                query = query.Where(x => x.LastInsurance!.Type.Contains(type));
+                query = query.Where(x => x.Engin.EnginType != null && x.Engin.EnginType.Name.Contains(type));
+
 
             if (!string.IsNullOrEmpty(company))
                 query = query.Where(x => x.LastInsurance!.Company.Contains(company));

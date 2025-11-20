@@ -19,11 +19,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<PublicPat> PublicPats { get; set; }
 
     public DbSet<Role> Roles { get; set; }
-   
- 
+
+    public DbSet<EnginType> EnginTypes { get; set; }
+
     public DbSet<Engin> Engins { get; set; }
     public DbSet<Insurance> Insurances { get; set; }
- 
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
