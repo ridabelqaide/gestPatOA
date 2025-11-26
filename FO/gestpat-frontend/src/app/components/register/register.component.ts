@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../Services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   showPassword = false;
 
   registerData = {
@@ -23,7 +23,16 @@ export class RegisterComponent {
 
   errorMessage?: string;
   successMessage?: string;
+  roles: any[] = [];
 
+  ngOnInit(): void {
+    this.authService.getRoles().subscribe({
+      next: (data) => {
+        this.roles = data;
+      },
+      error: (err) => console.error("Erreur lors du chargement des rôles :", err)
+    });
+  }
   constructor(private router: Router, private authService: AuthService) { }
 
   togglePasswordVisibility(): void {

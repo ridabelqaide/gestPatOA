@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../../Services/auth.service';
 
 interface MenuItem {
   id: string;
@@ -28,7 +29,7 @@ interface SubMenuItem {
 export class SidebarComponent {
   @Input() isOpen = false;
   @Output() toggleSidebar = new EventEmitter<void>();
-  @Output() logout = new EventEmitter<void>();
+ // @Output() logout = new EventEmitter<void>();
 
   activeRoute = '';
 
@@ -76,9 +77,18 @@ export class SidebarComponent {
         { id: 'Maintenance', route: 'Maintenance', label: 'Maintenance', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
       ]
     },
+    {
+      id: 'Admin',
+      label: 'Admin Actions',
+      icon: 'M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z',
+      subMenus: [
+        { id: 'Fonctionnaire', route: '/home/Official', label: 'Les Fonctionnaires', icon: 'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z' },
+        
+      ]
+    },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
     // Écouter les changements de route pour mettre à jour l'état actif
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -91,8 +101,16 @@ export class SidebarComponent {
     this.toggleSidebar.emit();
   }
 
-  onLogout(): void {
-    this.logout.emit();
+  //onLogout(): void {
+  //  this.logout.emit();
+  //}
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+  get isAdmin(): boolean {
+    const isAdmin = this.authService.isAdmin();
+    return isAdmin;
   }
 
   toggleSubMenu(menuItem: MenuItem): void {

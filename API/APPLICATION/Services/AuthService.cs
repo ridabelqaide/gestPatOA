@@ -207,5 +207,11 @@ namespace PATOA.APPLICATION.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public async Task<bool> LogoutAsync(string token)
+        {
+            await Task.CompletedTask;
+            return true;
+        }
+
     }
 }

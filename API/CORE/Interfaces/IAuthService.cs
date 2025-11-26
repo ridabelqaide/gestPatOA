@@ -15,6 +15,7 @@ namespace PATOA.CORE.Interfaces
         Task<bool> UpdateAccountAsync(Account account);
         Task<bool> DeactivateAccountAsync(Guid accountId);
         Task<bool> ReactivateAccountAsync(Guid accountId);
+        Task<bool> LogoutAsync(string token);
     }
 
     public class LoginResponse

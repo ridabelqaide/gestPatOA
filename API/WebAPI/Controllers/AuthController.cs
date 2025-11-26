@@ -112,6 +112,20 @@ namespace PATOA.API.Controllers
 
             return Ok(new { message = "Account reactivated successfully" });
         }
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<ActionResult> Logout()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var result = await _authService.LogoutAsync(token);
+
+            if (!result)
+                return BadRequest(new { message = "Logout failed" });
+
+            return Ok(new { message = "Logged out successfully" });
+        }
+
     }
 
     public class LoginRequest

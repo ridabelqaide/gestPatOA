@@ -23,7 +23,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<EnginType> EnginTypes { get; set; }
 
     public DbSet<Engin> Engins { get; set; }
+
     public DbSet<Insurance> Insurances { get; set; }
+
+    public DbSet<Official> Officials { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,17 +80,20 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-      
- 
-        
 
-       
+        // Official configurations
+        modelBuilder.Entity<Official>(entity =>
+        {
+            entity.HasIndex(o => o.CIN).IsUnique();
+        });
 
-        
-       
 
-       
- 
+
+
+
+
+
+
 
         // Engin configurations
         modelBuilder.Entity<Engin>(entity =>
