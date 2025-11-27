@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PATOA.INFRA.Data;
 
@@ -11,9 +12,11 @@ using PATOA.INFRA.Data;
 namespace INFRA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251123134000_AddOfficialEntity")]
+    partial class AddOfficialEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,72 +104,6 @@ namespace INFRA.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("PATOA.CORE.Entities.Affectation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<double?>("CurrentKm")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("EndKm")
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("EnginId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Object")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("OfficialId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnginId");
-
-                    b.HasIndex("OfficialId");
-
-                    b.ToTable("Affectations");
                 });
 
             modelBuilder.Entity("PATOA.CORE.Entities.AuditLog", b =>
@@ -916,21 +853,6 @@ namespace INFRA.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("PATOA.CORE.Entities.Affectation", b =>
-                {
-                    b.HasOne("PATOA.CORE.Entities.Engin", "Engin")
-                        .WithMany("Affectations")
-                        .HasForeignKey("EnginId");
-
-                    b.HasOne("PATOA.CORE.Entities.Official", "Official")
-                        .WithMany("Affectations")
-                        .HasForeignKey("OfficialId");
-
-                    b.Navigation("Engin");
-
-                    b.Navigation("Official");
-                });
-
             modelBuilder.Entity("PATOA.CORE.Entities.Engin", b =>
                 {
                     b.HasOne("PATOA.CORE.Entities.EnginType", "EnginType")
@@ -972,19 +894,12 @@ namespace INFRA.Migrations
 
             modelBuilder.Entity("PATOA.CORE.Entities.Engin", b =>
                 {
-                    b.Navigation("Affectations");
-
                     b.Navigation("Insurances");
                 });
 
             modelBuilder.Entity("PATOA.CORE.Entities.EnginType", b =>
                 {
                     b.Navigation("Engins");
-                });
-
-            modelBuilder.Entity("PATOA.CORE.Entities.Official", b =>
-                {
-                    b.Navigation("Affectations");
                 });
 
             modelBuilder.Entity("PATOA.CORE.Entities.Right", b =>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../../core/components/sidebar/sidebar.component';
+import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,8 +14,8 @@ import { SidebarComponent } from '../../core/components/sidebar/sidebar.componen
 export class HomeComponent {
   sidebarOpen = false;
   hasActiveRoute = false;
- 
-  constructor(private router: Router) {}
+
+  constructor(private router: Router, private authService: AuthService) { }
 
   onToggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
@@ -27,8 +28,8 @@ export class HomeComponent {
     setTimeout(() => this.hasActiveRoute = false);
   }
 
-  onLogout(): void {
-    // Pour l'instant, redirection vers login
+  onLogout() {
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

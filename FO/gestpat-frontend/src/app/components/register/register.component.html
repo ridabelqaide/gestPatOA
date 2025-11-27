@@ -49,9 +49,14 @@
                 required
                 [(ngModel)]="registerData.roleId"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-          <option value="" disabled>Choisissez un rôle</option>
-          <option value="1">Admin</option>
-          <option value="2">Agent</option>
+
+          <option [ngValue]="null" disabled>Choisissez un rôle</option>
+
+          <option *ngFor="let role of roles"
+                  [ngValue]="role.id">
+            {{ role.name }}
+          </option>
+
         </select>
       </div>
       <button type="submit"

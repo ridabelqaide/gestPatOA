@@ -1,0 +1,336 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+
+    <div class="mb-10 animate-[slideDown_0.5s_ease-out]">
+      <h1 class="text-5xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-3">
+        Liste des Officiels
+      </h1>
+      <p class="text-gray-600 text-lg">Gérez et consultez les informations des officiels</p>
+    </div>
+
+    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2" *ngIf="isAdmin">
+      <button (click)="openAddModal()" class="group relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-3">
+        <span class="text-2xl group-hover:rotate-90 transition-transform duration-300">➕</span>
+        <span>Ajouter un Officiel</span>
+      </button>
+    </div>
+
+    <div class="mb-8 bg-white/80 backdrop-blur-sm p-6 rounded-3xl shadow-lg border border-gray-100">
+
+      <div class="flex items-center gap-2 mb-4">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        <h2 class="text-lg font-semibold text-gray-700">Filtres de recherche</h2>
+      </div>
+
+      <div class="flex flex-wrap gap-4 justify-center items-end p-4 rounded-xl">
+        <div class="relative">
+          <input type="text"
+                 placeholder="⚧️ Genre"
+                 [(ngModel)]="filters.genre"
+                 (input)="onFilterChange('genre', filters.genre)"
+                 class="w-full border-2 border-gray-200 px-2 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 bg-white hover:border-gray-300 placeholder:text-gray-400" />
+        </div>
+
+        <div class="relative">
+          <input type="text"
+                 placeholder="💼 Fonction"
+                 [(ngModel)]="filters.fonction"
+                 (input)="onFilterChange('fonction', filters.fonction)"
+                 class="w-full border-2 border-gray-200 px-2 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 bg-white hover:border-gray-300 placeholder:text-gray-400" />
+        </div>
+
+        <div class="relative">
+          <input type="text"
+                 placeholder="🏢 Service"
+                 [(ngModel)]="filters.service"
+                 (input)="onFilterChange('service', filters.service)"
+                 class="w-full border-2 border-gray-200 px-2 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 bg-white hover:border-gray-300 placeholder:text-gray-400" />
+        </div>
+
+        <div class="relative">
+          <button (click)="resetFilters()" title="Réinitialiser"
+                  class=" items-center justify-center px-3 py-3 rounded-full bg-sky-200 text-sky-900 hover:bg-sky-300 shadow hover:opacity-90 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flex gap-1 justify-end text-sm text-gray-600 mr-4 my-2">
+      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse mt-2"></div>
+      <span class="font-medium">{{ totalItems }} officiels</span>
+    </div>
+    <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+
+      <div class="hidden lg:block overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700  tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>🆔</span> CIN
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700 tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>👤</span> Nom
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700  tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>⚧️</span> Genre
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700  tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>💼</span> Fonction
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700  tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>🏢</span> Service
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left text-sm font-bold text-gray-700  tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>📅</span> Date d'ambauche
+                </div>
+              </th>
+              <th class="px-6 py-4 text-center text-sm font-bold text-gray-700  tracking-wider" *ngIf="isAdmin">
+                <div class="flex items-center justify-center gap-2">
+                  <span>⚙️</span> Actions
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr *ngFor="let official of officials; let i = index"
+                class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 group">
+              <td class="px-6 py-4 text-sky-900 font-semibold underline cursor-pointer hover:text-sky-600 transition"
+                  (click)="openEditModal(official)">{{ official.cin }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+
+                  <span class="font-medium text-gray-800">{{ official.firstName }} {{official.lastName}}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                      [ngClass]="official.genre === 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'">
+                  {{ official.genre }}
+                </span>
+
+
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-cyan-50 text-cyan-700">
+                  {{ official.fonction }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+                  {{ official.service }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center text-sm font-medium">
+                  <span>{{ official.dateEmbauche | date: 'dd/MM/yyyy' }}</span>
+                </span>
+              </td>
+              <td class="px-6 py-4" *ngIf="isAdmin">
+                <div class="flex justify-center gap-2">
+                  <button (click)="openEditModal(official)" title="Modifier"
+                          class="p-2 rounded-full bg-yellow-100 text-yellow-900 hover:bg-yellow-200 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-yellow-500">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+
+                  <button (click)="deleteOfficial(official.id!)" title="Supprimer"
+                          class="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-red-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- pour responsive -->
+      <div class="lg:hidden p-4 space-y-4">
+        <div *ngFor="let official of officials; let i = index"
+             class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-5 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+             [style.animation]="'fadeIn 0.3s ease-out ' + (i * 0.05) + 's backwards'">
+
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div>
+                <h3 class="font-bold text-gray-800 text-lg">{{ official.firstName }}</h3>
+                <p class="text-sm text-gray-500">{{ official.cin }}</p>
+              </div>
+            </div>
+            <div class="flex gap-2 justify-center" *ngIf="isAdmin">
+              <button (click)="openEditModal(official)" title="Modifier"
+                      class="p-2 rounded-full bg-yellow-100 text-yellow-900 hover:bg-yellow-200 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-yellow-500">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+              </button>
+
+              <button (click)="deleteOfficial(official.id!)" title="Supprimer"
+                      class="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-red-600">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500 text-sm font-medium w-20">Genre:</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
+                {{ official.genre }}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500 text-sm font-medium w-20">Fonction:</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+                {{ official.fonction }}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500 text-sm font-medium w-20">Service:</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+                {{ official.service }}
+              </span>
+            </div>
+            
+          </div>
+
+        
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-2">
+        <mat-paginator [length]="totalItems"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[1, 5, 10, 20]"
+                       (page)="onPageChange($event)"
+                       class="rounded-xl">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal-->
+<div *ngIf="showModal"
+     class="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center z-50 p-4"
+    >
+
+  <div class="bg-white rounded-3xl p-8 w-full max-w-2xl shadow-2xl border border-gray-100">
+
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg">
+          ✏️
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            {{ editOfficial?.id ? 'Modifier Officiel' : 'Ajouter Officiel' }}
+          </h2>
+          <p class="text-sm">
+            {{ editOfficial?.id ? 'Mettez à jour les informations' : 'Remplissez les informations pour créer un officiel' }}
+          </p>
+        </div>
+      </div>
+
+      <button (click)="closeEditModal()"
+              class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors duration-300 text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nom</label>
+          <input [(ngModel)]="editOfficial.firstName"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Entrez le nom" />
+        </div>
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Prenom</label>
+          <input [(ngModel)]="editOfficial.lastName"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Entrez le prenom" />
+        </div>
+
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">CIN</label>
+          <input [(ngModel)]="editOfficial.cin"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Numéro CIN" />
+        </div>
+
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Genre</label>
+          <select [(ngModel)]="editOfficial.genre"
+                  class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300 bg-white">
+            <option value="" disabled>Choisissez le genre</option>
+            <option value="M">Masculin</option>
+            <option value="F">Féminin</option>
+          </select>
+        </div>
+
+
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Fonction</label>
+          <input [(ngModel)]="editOfficial.fonction"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Fonction" />
+        </div>
+
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Service</label>
+          <input [(ngModel)]="editOfficial.service"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Service" />
+        </div>
+        <div class="group">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Date d'embauche</label>
+          <input [(ngModel)]="editOfficial.dateEmbauche" type="date"
+                 class="w-full border-2 border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:outline-none transition-all duration-300 group-hover:border-gray-300"
+                 placeholder="Date d'embauche" />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+      <button (click)="closeEditModal()"
+              class="px-4 py-2 rounded-full border-2 border-gray-300 hover:bg-gray-50 font-semibold text-gray-700 transition-all duration-300 hover:border-gray-400">
+        Annuler
+      </button>
+
+      <button (click)="saveEdit()"
+              class="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+        <span>💾</span> {{ editOfficial?.id ? 'Enregistrer les modifications' : 'Ajouter Officiel' }}
+      </button>
+    </div>
+  </div>
+</div>
+

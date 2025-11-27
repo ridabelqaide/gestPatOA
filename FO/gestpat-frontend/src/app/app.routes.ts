@@ -7,6 +7,8 @@ import { PublicPatComponent } from './components/public-pat/public-pat.component
 import { PrivatePatComponent } from './components/private-pat/private-pat.component';
 import { ListAutoInsuranceComponent } from './components/list-auto-insurance/list-auto-insurance.component';
 import { ListEnginTypeComponent } from './components/list-engin-type/list-engin-type.component';
+import { OfficialComponent } from './components/official/official.component';
+import { AffectationComponent } from './components/affectation/affectation.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -21,6 +23,11 @@ export const routes: Routes = [
       { path: 'PrivatePat', component: PrivatePatComponent },
       { path: 'ListAutoInsurance', component: ListAutoInsuranceComponent },
       { path: 'EnginType', component: ListEnginTypeComponent },
+      { path: 'Official', component: OfficialComponent },
+      { path: 'Affectation', component: AffectationComponent },
+
+
+
 
 
       { path: '', redirectTo: '', pathMatch: 'full' }
