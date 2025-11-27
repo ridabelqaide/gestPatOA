@@ -27,6 +27,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Insurance> Insurances { get; set; }
 
     public DbSet<Official> Officials { get; set; }
+    public DbSet<Affectation> Affectations { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

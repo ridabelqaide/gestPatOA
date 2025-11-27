@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace PATOA.CORE.Entities
 {
@@ -34,5 +36,8 @@ namespace PATOA.CORE.Entities
         public string? Service { get; set; }
 
         public string? Details { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Affectation> Affectations { get; set; } = new List<Affectation>();
     }
 }

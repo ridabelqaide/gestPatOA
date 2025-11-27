@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PATOA.WEBAPI.Controllers
 {
-    [Authorize(Roles = "admin")]
     [ApiController]
     [Route("api/Official")]
     public class OfficialController : ControllerBase
@@ -22,6 +21,7 @@ namespace PATOA.WEBAPI.Controllers
             _service = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Official>>> GetAll()
         {
@@ -29,6 +29,7 @@ namespace PATOA.WEBAPI.Controllers
             return Ok(list);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("paged")]
         public async Task<ActionResult<PagedResult<Official>>> GetPaged(
             [FromQuery] string? genre,
@@ -41,6 +42,7 @@ namespace PATOA.WEBAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -50,6 +52,7 @@ namespace PATOA.WEBAPI.Controllers
             return Ok(official);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Official official)
         {
@@ -61,6 +64,7 @@ namespace PATOA.WEBAPI.Controllers
                 new { message = $"Official '{created.FirstName} {created.LastName}' créé avec succès.", data = created });
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] Official official)
         {
@@ -75,6 +79,7 @@ namespace PATOA.WEBAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

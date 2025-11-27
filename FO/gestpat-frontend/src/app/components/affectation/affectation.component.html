@@ -1,0 +1,299 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h3 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-3">
+          Gestion des Affectations
+        </h3>
+        <p class="text-gray-600">Gérer les affectations des fonctionnaires</p>
+      </div>
+      <button (click)="openModal()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Nouvelle Affectation
+      </button>
+    </div>
+
+    <div class="mb-6 bg-white rounded-xl shadow-md border border-gray-200 p-3">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        Filtres de recherche
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-10">
+        <div>
+          <label class="flex gap-2 text-sm font-medium text-gray-700 mb-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A3 3 0 017 12h10a3 3 0 011.879 5.804M12 12a5 5 0 100-10 5 5 0 000 10z" />
+            </svg>Fonctionnaire
+          </label>
+          <select [(ngModel)]="filters.officialId" (change)="loadAffectations()"
+                  class="w-full border border-gray-300 rounded-full bg-indigo-50 p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+            <option value="">Tous les fonctionnaires</option>
+            <option *ngFor="let o of officials" [value]="o.id">{{ o.firstName }} {{ o.lastName }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class=" flex gap-2 text-sm font-medium text-gray-700 mb-2"><svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13l2-2 4 4L19 5l2 2-12 12-6-6z" />
+          </svg>Véhicule</label>
+          <select [(ngModel)]="filters.enginId" (change)="loadAffectations()"
+                  class="w-full border border-gray-300 rounded-full bg-indigo-50 p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+            <option value="">Tous les Véhicules</option>
+            <option *ngFor="let e of engins" [value]="e.id">{{ e.matricule }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="flex gap-2 text-sm font-medium text-gray-700 mb-2"><span>📅</span>Date de début</label>
+          <input type="date" [(ngModel)]="filters.startDate" (change)="loadAffectations()"
+                 class="w-full border border-gray-300 rounded-full p-3 bg-indigo-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+        </div>
+
+        <div class="flex justify-start">
+          <button (click)="resetFilters()" title="Réinitialiser"
+                  class="w-12 h-12 flex items-center justify-center rounded-full bg-amber-200 text-amber-900 hover:bg-amber-300 shadow hover:opacity-90 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+      <div class="overflow-x-auto overflow-y-auto max-h-[400px]">
+        <table class="w-full">
+          <thead class="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-300">
+            <tr class="text-gray-700">
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                  </svg>
+                  Num
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A3 3 0 017 12h10a3 3 0 011.879 5.804M12 12a5 5 0 100-10 5 5 0 000 10z" />
+                  </svg>
+                  Fonctionnaire
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13l2-2 4 4L19 5l2 2-12 12-6-6z" />
+                  </svg>
+                  Véhicule
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8a9 9 0 110-18 9 9 0 010 18z" />
+                  </svg>
+                  Objet
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <span>📅</span>
+                  Date début
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m5-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Date fin
+                </div>
+              </th>
+
+              <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">
+                <div class="flex justify-center items-center gap-2">
+                  <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-7-7v14" />
+                  </svg>
+                  Actions
+                </div>
+              </th>
+
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let a of affectations; let i = index" class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{i + 1}}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <div class="flex items-center gap-2 font-medium">
+
+                  {{a.official?.firstName}} {{a.official?.lastName}}
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                  {{a.engin?.matricule}}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{a.object}}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                  {{a.startDate | date:'dd/MM/yyyy'}}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                  {{a.endDate | date:'dd/MM/yyyy'}}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-center">
+                <div class="flex justify-center gap-2">
+                  <button (click)="editAffectation(a)" title="Modifier"
+                          class="p-2 rounded-full bg-yellow-100 text-yellow-900 hover:bg-yellow-200 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-yellow-500">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+
+                  <button (click)="deleteAffectation(a.id)" title="Supprimer"
+                          class="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 text-red-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="affectations.length === 0">
+              <td colspan="7" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center justify-center text-gray-500">
+                  <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p class="text-lg font-medium">Aucune affectation trouvée</p>
+                  <p class="text-sm">Ajoutez votre première affectation</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+        <mat-paginator [length]="totalItems"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[1, 5, 10, 20]"
+                       (page)="onPageChange($event)"
+                       class="bg-transparent">
+        </mat-paginator>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="closeModal()">
+      <div class="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 overflow-y-auto max-h-[90vh]" (click)="$event.stopPropagation()">
+
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+          <h3 class="text-xl font-bold text-indigo-800">{{ isEditMode ? 'Modifier Affectation' : 'Nouvelle Affectation' }}</h3>
+          <button (click)="closeModal()" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+          <div>
+            <label class="block text-sm font-medium mb-1">Fonctionnaire <span class="text-red-600">*</span></label>
+            <select [(ngModel)]="form.officialId" class="w-full border rounded-full bg-indigo-100 px-3 py-2">
+              <option value="">Sélectionner</option>
+              <option *ngFor="let o of officials" [value]="o.id">{{ o.firstName }} {{ o.lastName }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Véhicule <span class="text-red-600">*</span></label>
+            <select [(ngModel)]="form.enginId" class="w-full border rounded-full bg-indigo-100 px-3 py-2">
+              <option value="">Sélectionner</option>
+              <option *ngFor="let e of engins" [value]="e.id">{{ e.matricule }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+          <div>
+            <label class="block text-sm font-medium mb-1">Objet <span class="text-red-600">*</span></label>
+            <input type="text" [(ngModel)]="form.object" placeholder="Objet de l'affectation" class="w-full border rounded-full px-3 py-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Détails</label>
+            <input type="text" [(ngModel)]="form.details" placeholder="Détails supplémentaires" class="w-full border rounded-full px-3 py-2">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+          <div>
+            <label class="block text-sm font-medium mb-1">Date de début <span class="text-red-600">*</span></label>
+            <input type="date" [(ngModel)]="form.startDate" class="w-full border rounded-full px-3 py-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Date de fin</label>
+            <input type="date" [(ngModel)]="form.endDate" class="w-full border rounded-full px-3 py-2">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
+          <div>
+            <label class="block text-sm font-medium mb-1">Kilométrage actuel</label>
+            <div class="relative">
+              <input type="number" [(ngModel)]="form.currentKm" placeholder="0" class="w-full border rounded-full px-3 py-2 pr-12">
+              <span class="absolute right-3 top-2 text-gray-500 font-medium">km</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Kilométrage final</label>
+            <div class="relative">
+              <input type="number" [(ngModel)]="form.endKm" placeholder="0" class="w-full border rounded-full px-3 py-2 pr-12">
+              <span class="absolute right-3 top-2 text-gray-500 font-medium">km</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="form.currentKm && form.endKm && form.endKm > form.currentKm" class="bg-blue-50 border border-blue-200 rounded p-3 flex items-center gap-2 mb-4">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-blue-800">Distance</p>
+            <p class="text-sm text-blue-700">{{ form.endKm - form.currentKm }} km</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3 border-t pt-3">
+          <button (click)="closeModal()" class="px-4 py-2 border rounded-full hover:bg-gray-100">Annuler</button>
+
+          <button (click)="saveAffectation()" class="px-5 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:opacity-90 flex items-center gap-2 transition">
+            {{ isEditMode ? 'Modifier' : 'Créer' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  </div>

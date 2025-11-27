@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 
 namespace PATOA.CORE.Entities
 {
@@ -38,6 +40,8 @@ namespace PATOA.CORE.Entities
         
         // Relation avec les assurances
         public ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
+        [JsonIgnore]
+        public ICollection<Affectation> Affectations { get; set; } = new List<Affectation>();
     }
-    
+
 }
